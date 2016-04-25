@@ -30,27 +30,9 @@ public class PresentServiceImpl implements PresentService{
             presents = mapper.readValue(jsonPresents, new TypeReference<ArrayList<Map<String,String>>>(){});
 
             //check list of presents against wishlist
-            for(Map<String,String> present : presents) { //for each present, check each key against...
-                for (Map<String, String> wishlistItem : wishlist) { //...each item of the wishlist
-
-                    Boolean containsKey = true; //hope springs eternal
-
-                    for (String key : present.keySet()) { // Just using the hashmap keys allows the input file to contain whatever qualities we want
-
-                        if (wishlistItem.containsKey(key) && !present.get(key).equals(wishlistItem.get(key))) {
-                            containsKey = false;
-                        }
-
-                        if(!containsKey){ //this wishlist item doesn't match up to what this present seems like, move on
-                            break;
-                        }
-
-                    }
-
-                    if(containsKey){ //we have a confirmed wishlist present!
-                        confirmedPresents.add(wishlistItem.get("name"));
-                    }
-
+            for(Map<String,String> wishListItem : wishlist) {
+                if(isPresentPresent(wishListItem, presents)){
+                    confirmedPresents.add(wishListItem.get("name")); //I'm assuming we know what the thing is called
                 }
             }
         }catch(Exception e){
@@ -58,5 +40,25 @@ public class PresentServiceImpl implements PresentService{
         }
 
         return confirmedPresents;
+    }
+
+    private Boolean isPresentPresent(Map<String,String> wishListItem, ArrayList<Map<String, String>> presents){
+
+        for(Map<String,String> present : presents){ // For each present we shook
+            Boolean isPresent = true;
+
+            for(String quality : present.keySet()){ // check its qualities against our wishlist
+                if(!present.get(quality).equals(wishListItem.get(quality))){// Present isn't like the wishlist item
+                    isPresent = false;
+                }
+            }
+
+            if(isPresent){
+                return isPresent;
+            }
+
+        }
+
+        return false;
     }
 }
