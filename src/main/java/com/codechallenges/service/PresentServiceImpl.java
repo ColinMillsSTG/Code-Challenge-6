@@ -2,6 +2,7 @@ package com.codechallenges.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -11,6 +12,8 @@ import java.util.Map;
  *
  * Implementation of data requests to be performed against lists of presents and wish lists.
  */
+
+@Service
 public class PresentServiceImpl implements PresentService{
     public ArrayList<String> guessPresents(String jsonWishList, String jsonPresents){
 
