@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by colin.mills on 4/25/2016.
@@ -24,7 +25,7 @@ public class WishlistController {
 
     @RequestMapping("wishlist")
     @ResponseBody
-    public ArrayList<String> shakePresents(@RequestParam(value="wishlist") String wishlist, @RequestParam(value="presents") String presents){
+    public ArrayList<String> shakePresents(@RequestParam(value="wishlist") ArrayList<Map<String, String>> wishlist, @RequestParam(value="presents") ArrayList<Map<String, String>> presents){
 
         return presentService.guessPresents(wishlist, presents);
     }

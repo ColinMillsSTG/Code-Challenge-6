@@ -1,6 +1,7 @@
 package com.codechallenges.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by colin.mills on 4/25/2016.
@@ -10,4 +11,5 @@ import java.util.ArrayList;
 
 public interface PresentService {
     ArrayList<String> guessPresents(String wishlist, String presents);
+    ArrayList<String> guessPresents(ArrayList<Map<String, String>> wishlist, ArrayList<Map<String, String>> presents);
 }

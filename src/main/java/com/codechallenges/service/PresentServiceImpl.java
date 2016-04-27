@@ -42,6 +42,25 @@ public class PresentServiceImpl implements PresentService{
         return confirmedPresents;
     }
 
+
+    public ArrayList<String> guessPresents(ArrayList<Map<String, String>> wishlist, ArrayList<Map<String, String>> presents){
+
+        ArrayList<String> confirmedPresents = new ArrayList<>();
+
+        try {
+            //check list of presents against wishlist
+            for(Map<String,String> wishListItem : wishlist) {
+                if(isPresentPresent(wishListItem, presents)){
+                    confirmedPresents.add(wishListItem.get("name")); //I'm assuming we have names for everything
+                }
+            }
+        }catch(Exception e){
+            System.out.println(e.getCause());
+        }
+
+        return confirmedPresents;
+    }
+
     private Boolean isPresentPresent(Map<String,String> wishListItem, ArrayList<Map<String, String>> presents){
 
         for(Map<String,String> present : presents){ // For each present we shook
