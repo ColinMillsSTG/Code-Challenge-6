@@ -1,5 +1,7 @@
 package com.codechallenges.service;
 
+import com.codechallenges.exceptions.ResourceNotFoundException;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -10,6 +12,19 @@ import java.util.Map;
  */
 
 public interface PresentService {
-    ArrayList<String> guessPresents(String wishlist, String presents);
-    ArrayList<String> guessPresents(ArrayList<Map<String, String>> wishlist, ArrayList<Map<String, String>> presents);
+
+    ArrayList<String> guessPresents();
+    ArrayList<String> guessPresents(ArrayList<Map<String,String>> wishlist);
+
+    void setWishlist(ArrayList<Map<String,String>> wishlist);
+    void setPresents(ArrayList<Map<String,String>> presents);
+
+    ArrayList<Map<String,String>> getPresents();
+
+    Map<String,String> getPresentForId(int id) throws ResourceNotFoundException;
+
+    void deletePresentForId(int id) throws ResourceNotFoundException;
+
+    void clearPresents();
+    void clearWishlist();
 }
