@@ -55,12 +55,22 @@ public class PresentServiceImpl implements PresentService{
         this.presents = presents;
     }
 
+    public ArrayList<Map<String,String>> getWishlist() { return wishlist; }
+
     public ArrayList<Map<String,String>> getPresents(){
         return presents;
     }
 
+    public Map<String,String> getWishlistItemForId(int id) throws ResourceNotFoundException{
+        return wishlist.get(id);
+    }
+
     public Map<String,String> getPresentForId(int id) throws ResourceNotFoundException{
         return presents.get(id);
+    }
+
+    public void deleteWishlistItemForId(int id) throws ResourceNotFoundException{
+        wishlist.remove(id);
     }
 
     public void deletePresentForId(int id) throws ResourceNotFoundException{
