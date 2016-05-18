@@ -20,10 +20,13 @@ public interface PresentService {
     void setPresents(ArrayList<Map<String,String>> presents);
 
     ArrayList<Map<String,String>> getPresents();
+    ArrayList<Map<String,String>> getWishlist();
 
     Map<String,String> getPresentForId(int id) throws ResourceNotFoundException;
+    Map<String,String> getWishlistItemForId(int id) throws ResourceNotFoundException;
 
     void deletePresentForId(int id) throws ResourceNotFoundException;
+    void deleteWishlistItemForId(int id) throws ResourceNotFoundException;
 
     void clearPresents();
     void clearWishlist();
