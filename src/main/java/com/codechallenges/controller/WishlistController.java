@@ -1,5 +1,7 @@
 package com.codechallenges.controller;
 
+import com.codechallenges.entity.Present;
+import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.service.PresentService;
 import org.omg.CORBA.Request;
@@ -18,7 +20,7 @@ import java.util.Map;
  * Contains end-points for wish list guessing service.
  */
 
-@Controller
+@RestController
 @RequestMapping("/")
 public class WishlistController {
 
@@ -26,9 +28,58 @@ public class WishlistController {
     PresentService presentService;
 
     @RequestMapping(value = "getMatches", method = RequestMethod.GET)
-    @ResponseBody
     public ArrayList<String> getMatches(){
         return presentService.guessPresents();
+    }
+
+    /**
+     *
+     * @return
+     *
+     * Retrieve the list of wishlist items currently in memory.
+     */
+    @RequestMapping(value = "presents", method = RequestMethod.GET)
+    public ArrayList<WishItem> getWishlist(){
+        return presentService.getWishlist();
+    }
+
+    /**
+     *
+     * @return
+     *
+     * Retrieve the list of presents currently in memory.
+     */
+    @RequestMapping(value = "presents", method = RequestMethod.GET)
+    public ArrayList<Present> getPresents(){
+        return presentService.getPresents();
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     *
+     * Given a present ID, find a matching present.
+     *
+     * Returns 404 if no such present exists.
+     */
+    @RequestMapping(value = "wishlist/{id}", method = RequestMethod.GET)
+    public WishItem getWishItemForId(@RequestParam int id){
+        return presentService.getWishlistItemForId(id);
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     *
+     * Given a present ID, find a matching present.
+     *
+     * Returns 404 if no such present exists.
+     */
+    @RequestMapping(value = "presents/{id}", method = RequestMethod.GET)
+    public Present getPresentForId(@RequestParam int id){
+        return presentService.getPresentForId(id);
     }
 
     /**
@@ -39,8 +90,7 @@ public class WishlistController {
      * Post a new wishlist
      */
     @RequestMapping(value = "wishlist", method = RequestMethod.POST, consumes = {"application/json"})
-    @ResponseBody
-    public ArrayList<String> postWishlist(@RequestBody ArrayList<Map<String, String>> wishlist){
+    public ArrayList<String> postWishlist(@RequestBody ArrayList<WishItem> wishlist){
 
         return presentService.guessPresents(wishlist);
 
@@ -56,39 +106,31 @@ public class WishlistController {
      * Post a new list of presents
      */
     @RequestMapping(value = "presents", method = RequestMethod.POST, consumes = {"application/json"})
-    @ResponseBody
-    public void postPresents(@RequestBody ArrayList<Map<String,String>> presents){
+    public void postPresents(@RequestBody ArrayList<Present> presents){
 
         presentService.setPresents(presents);
 
     }
 
     /**
-     *
-     * @return
-     *
-     * Retrieve the list of presents currently in memory.
+     * Add a wishlist item to the existing list
+     * @param wishItem
      */
-    @RequestMapping(value = "presents", method = RequestMethod.GET)
-    @ResponseBody
-    public ArrayList<Map<String,String>> getPresents(){
-        return presentService.getPresents();
+    @RequestMapping(value = "wishlist", method = RequestMethod.PUT, consumes = {"application/json"})
+    public void addWishListItem(WishItem wishItem){
+        presentService.addWishlistItem(wishItem);
     }
 
     /**
-     *
-     * @param id
-     * @return
-     *
-     * Given a present ID, find a matching present.
-     *
-     * Returns 404 if no such present exists.
+     * Add a present item to the existing list
+     * @param present
      */
-    @RequestMapping(value = "presents/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String,String> getPresentForId(@RequestParam int id){
-        return presentService.getPresentForId(id);
+    @RequestMapping(value = "presents", method = RequestMethod.PUT, consumes = {"application/json"})
+    public void addPresent(Present present){
+        presentService.addPresent(present);
     }
+
+    //add present
 
     /**
      *
@@ -102,6 +144,20 @@ public class WishlistController {
     @ResponseBody
     public void deletePresent(@RequestParam int id){
             presentService.deletePresentForId(id);
+    }
+
+    /**
+     *
+     * @param id
+     *
+     * Given a present ID, delete the matching present.
+     *
+     * Returns 404 if no such present exists.
+     */
+    @RequestMapping(value = "wishlist/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void deleteWishItem(@RequestParam int id){
+            presentService.deleteWishlistItemForId(id);
     }
 
 }

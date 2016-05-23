@@ -1,16 +1,22 @@
 package com.codechallenges;
 
 import com.codechallenges.controller.WishlistController;
+import com.codechallenges.entity.WishItem;
 import com.codechallenges.service.PresentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by colin.mills on 4/27/2016.
@@ -19,14 +25,36 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = WishlistController.class)
 @WebAppConfiguration
+@SpringApplicationConfiguration(classes = WishlistController.class)
 public class CodeChallenge6ControllerTests {
 
     private MockMvc mockMvc;
 
-    @Autowired
+    @Resource
     PresentService presentService;
+
+    /**
+     * Get Matches tests
+     */
+
+
+
+    /**
+     * Post wishlist tests
+     */
+
+    @Test
+    public void testPostWishlistNullData() throws Exception{
+        ArrayList<WishItem> wishlist = new ArrayList<>();
+
+        mockMvc.perform(post("/wislist")
+                .contentType(MediaType.APPLICATION_JSON));
+    }
+
+    /**
+     * Get wishlist tests
+     */
 
     @Test
     public void testShakePresentsNullData() throws Exception{
@@ -49,4 +77,9 @@ public class CodeChallenge6ControllerTests {
         //Expect
 
     }
+
+    /**
+     * Methods to test
+     *
+     */
 }

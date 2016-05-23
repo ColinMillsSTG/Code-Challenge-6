@@ -1,22 +1,22 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.WishlistController;
+import com.codechallenges.entity.Present;
+import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.service.PresentService;
 import com.codechallenges.service.PresentServiceImpl;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.rules.ExpectedException;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Created by colin.mills on 4/27/2016.
@@ -29,126 +29,237 @@ import java.util.Map;
 @WebAppConfiguration
 public class CodeChallenge6PresentServiceTests {
 
-    @Autowired
+    @Resource
     PresentService presentService;
 
     /**
-     * Test for guessPresents() with null data
+     *
+     * Setting up data
+     *
      */
-    @Test(expected = ResourceNotFoundException.class)
+
+    public ArrayList<WishItem> getWishlistGoodData(){
+
+        ArrayList<WishItem> wishlist = new ArrayList<>();
+
+        wishlist.add(new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
+        wishlist.add(new WishItem().setId(1).setName("Toy Car").setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
+        wishlist.add(new WishItem().setId(2).setName("Card Game").setSize("small").setClatters("no").setWeight("light").setGiver("Louie"));
+
+        return wishlist;
+
+    }
+
+    public ArrayList<WishItem> getWishlistBadData(){
+
+        ArrayList<WishItem> wishlist = new ArrayList<>();
+
+        wishlist.add(new WishItem().setName("blah").setSize("blah").setClatters("blah").setWeight("blah"));
+        wishlist.add(new WishItem().setName("Helium").setSize("2").setClatters("0").setWeight(".000002"));
+        wishlist.add(new WishItem().setName("janky").setSize("tanky").setClatters("ganky").setWeight("healbot"));
+
+        return wishlist;
+
+    }
+
+    public ArrayList<Present> getPresentsGoodData(){
+
+        ArrayList<Present> presents = new ArrayList<>();
+
+        presents.add(new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
+        presents.add(new Present().setId(1).setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
+
+        return presents;
+
+    }
+
+    public ArrayList<Present> getPresentsBadData(){
+
+        ArrayList<Present> presents = new ArrayList<>();
+
+        presents.add(new Present().setSize("foo").setClatters("bar").setWeight("baz"));
+        presents.add(new Present().setSize("huge").setClatters("I think it's broken").setWeight("weightless"));
+
+        return presents;
+
+    }
+
+    /**
+     *
+     * Begin tests
+     *
+     */
+
+    /**
+     * Test for guessPresents() with null data
+     * We're expecting this to error out
+     */
+    @Test
     public void testGuessPresentsNullData(){
         presentService.guessPresents();
     }
 
     /**
      * Test for guessPresents() with bad data
+     * Should not return any matches
      */
-    @Test(expected = ResourceNotFoundException.class)
+    @Test
     public void testGuessPresentsBadData(){
-        //set data that won't return any matches
-        ArrayList<Map<String,String>> wishlist = new ArrayList<>();
-        ArrayList<Map<String,String>> presents = new ArrayList<>();
-
-        HashMap<String,String> wishlistItem = new HashMap<>();
-        HashMap<String,String> wishlistItem2 = new HashMap<>();
-        HashMap<String,String> wishlistItem3 = new HashMap<>();
-
-        HashMap<String,String> presentsItem = new HashMap<>();
-        HashMap<String,String> presentsItem2 = new HashMap<>();
-
-        wishlistItem.put("name","Mini Puzzle");
-        wishlistItem.put("size","small");
-        wishlistItem.put("clatters","yes");
-        wishlistItem.put("weight","light");
-
-        wishlistItem2.put("name","Toy Car");
-        wishlistItem2.put("size","medium");
-        wishlistItem2.put("clatters","a bit");
-        wishlistItem2.put("weight","medium");
-
-        wishlistItem3.put("name","Card Game");
-        wishlistItem3.put("size","small");
-        wishlistItem3.put("clatters","no");
-        wishlistItem3.put("weight","light");
-
-        presentsItem.put("foo", "medium");
-        presentsItem.put("bar","a bit");
-        presentsItem.put("baz","medium");
-
-        presentsItem2.put("foo","small");
-        presentsItem2.put("bar","yes");
-        presentsItem2.put("baz","light");
-
-        wishlist.add(wishlistItem);
-        wishlist.add(wishlistItem2);
-        wishlist.add(wishlistItem3);
-
-        presents.add(presentsItem);
-        presents.add(presentsItem2);
-
-        assertNull(presentService.guessPresents());
-    }
-
-    public void testGuessPresentsGoodData(){
-        //set data that will return data
-        ArrayList<Map<String,String>> wishlist = new ArrayList<>();
-        ArrayList<Map<String,String>> presents = new ArrayList<>();
+        ArrayList<WishItem> wishlist = getWishlistGoodData();
+        ArrayList<Present> presents = new ArrayList<>();
         ArrayList<String> expected = new ArrayList<>();
 
-        HashMap<String,String> wishlistItem = new HashMap<>();
-        HashMap<String,String> wishlistItem2 = new HashMap<>();
-        HashMap<String,String> wishlistItem3 = new HashMap<>();
+        presentService.setWishlist(wishlist);
+        presentService.setPresents(presents);
 
-        HashMap<String,String> presentsItem = new HashMap<>();
-        HashMap<String,String> presentsItem2 = new HashMap<>();
+        assertEquals(expected,presentService.guessPresents());
+    }
 
-        wishlistItem.put("name","Mini Puzzle");
-        wishlistItem.put("size","small");
-        wishlistItem.put("clatters","yes");
-        wishlistItem.put("weight","light");
+    /**
+     * This test shold return the expected presents.
+     */
+    @Test
+    public void testGuessPresentsGoodData(){
+        //set data that will return data
+        ArrayList<WishItem> wishlist = getWishlistGoodData();
+        ArrayList<Present> presents = getPresentsGoodData();
+        ArrayList<String> expected = new ArrayList<>();
 
-        wishlistItem2.put("name","Toy Car");
-        wishlistItem2.put("size","medium");
-        wishlistItem2.put("clatters","a bit");
-        wishlistItem2.put("weight","medium");
-
-        wishlistItem3.put("name","Card Game");
-        wishlistItem3.put("size","small");
-        wishlistItem3.put("clatters","no");
-        wishlistItem3.put("weight","light");
-
-        presentsItem.put("size", "medium");
-        presentsItem.put("clatters","a bit");
-        presentsItem.put("weight","medium");
-
-        presentsItem2.put("size","small");
-        presentsItem2.put("clatters","yes");
-        presentsItem2.put("weight","light");
-
-        wishlist.add(wishlistItem);
-        wishlist.add(wishlistItem2);
-        wishlist.add(wishlistItem3);
-
-        presents.add(presentsItem);
-        presents.add(presentsItem2);
-
-        expected.add("Toy Car");
         expected.add("Mini Puzzle");
+        expected.add("Toy Car");
+
+        presentService.setWishlist(wishlist);
+        presentService.setPresents(presents);
 
         assertEquals(expected, presentService.guessPresents());
     }
 
-    /* @Todo: write these tests
-    void setWishlist(ArrayList<Map<String,String>> wishlist);
-    void setPresents(ArrayList<Map<String,String>> presents);
+    @Test
+    public void testSetAndGetWishlist(){
 
-    ArrayList<Map<String,String>> getPresents();
+        ArrayList<WishItem> wishItems = getWishlistGoodData();
 
-    Map<String,String> getPresentForId(int id) throws ResourceNotFoundException;
+        presentService.setWishlist(wishItems);
 
-    void deletePresentForId(int id) throws ResourceNotFoundException;
+        assertEquals(wishItems,presentService.getWishlist());
 
-    void clearPresents();
-    void clearWishlist();
-    */
+    }
+
+    @Test
+    public void testSetAndGetPresents(){
+
+        ArrayList<Present> presents = getPresentsGoodData();
+
+        presentService.setPresents(presents);
+
+        assertEquals(presents,presentService.getPresents());
+
+    }
+
+    @Test
+    public void testAddWishlistItem(){
+
+        ArrayList<WishItem> wishItems = getWishlistGoodData();
+
+        WishItem addedItem = new WishItem().setName("Laptop").setClatters("no").setSize("medium").setWeight("light");
+
+        presentService.setWishlist(wishItems);
+        presentService.addWishlistItem(addedItem);
+
+        wishItems.add(addedItem);
+
+        assertEquals(wishItems,presentService.getWishlist());
+
+    }
+
+    @Test
+    public void testAddPresent(){
+
+        ArrayList<Present> presents = getPresentsGoodData();
+
+        Present addedItem = new Present().setClatters("no").setSize("medium").setWeight("light");
+
+        presentService.setPresents(presents);
+        presentService.addPresent(addedItem);
+
+        presents.add(addedItem);
+
+        assertEquals(presents,presentService.getPresents());
+
+    }
+
+    @Test
+    public void testGetWishlistItemForId(){
+
+        presentService.setWishlist(getWishlistGoodData());
+
+        WishItem wishItem = new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
+
+        assertEquals(wishItem, presentService.getWishlistItemForId(0));
+
+    }
+
+    @Test
+    public void testGetPresentForId(){
+
+        presentService.setPresents(getPresentsGoodData());
+
+        Present present = new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
+
+        assertEquals(present, presentService.getPresentForId(0));
+
+    }
+
+    @Test (expected = ResourceNotFoundException.class)
+    public void testDeleteWishlistItem(){
+
+        ArrayList<String> expected = new ArrayList<>();
+
+        presentService.setWishlist(getWishlistGoodData());
+
+        presentService.deleteWishlistItemForId(0);
+
+        presentService.getWishlistItemForId(0);
+
+    }
+
+    @Test (expected = ResourceNotFoundException.class)
+    public void testDeletePresentForId(){
+
+        Present expected = new Present();
+
+        presentService.setPresents(getPresentsGoodData());
+
+        presentService.deletePresentForId(0);
+
+        assertEquals(expected, presentService.getPresentForId(0));
+
+    }
+
+    @Test
+    public void testClearWishlist(){
+
+        ArrayList<WishItem> expected = new ArrayList<>();
+
+        presentService.setWishlist(getWishlistGoodData());
+
+        presentService.clearWishlist();
+
+        assertEquals(expected, presentService.getWishlist());
+
+    }
+
+    @Test
+    public void testClearPresents(){
+
+        ArrayList<Present> expected = new ArrayList<>();
+
+        presentService.setPresents(getPresentsGoodData());
+
+        presentService.clearPresents();
+
+        assertEquals(expected, presentService.getPresents());
+
+    }
+
 }

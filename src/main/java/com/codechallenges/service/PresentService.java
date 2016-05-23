@@ -1,5 +1,7 @@
 package com.codechallenges.service;
 
+import com.codechallenges.entity.Present;
+import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 
 import java.util.ArrayList;
@@ -14,16 +16,19 @@ import java.util.Map;
 public interface PresentService {
 
     ArrayList<String> guessPresents();
-    ArrayList<String> guessPresents(ArrayList<Map<String,String>> wishlist);
+    ArrayList<String> guessPresents(ArrayList<WishItem> wishlist);
 
-    void setWishlist(ArrayList<Map<String,String>> wishlist);
-    void setPresents(ArrayList<Map<String,String>> presents);
+    ArrayList<Present> getPresents();
+    ArrayList<WishItem> getWishlist();
 
-    ArrayList<Map<String,String>> getPresents();
-    ArrayList<Map<String,String>> getWishlist();
+    void setWishlist(ArrayList<WishItem> wishlist);
+    void setPresents(ArrayList<Present> presents);
 
-    Map<String,String> getPresentForId(int id) throws ResourceNotFoundException;
-    Map<String,String> getWishlistItemForId(int id) throws ResourceNotFoundException;
+    void addWishlistItem(WishItem wishItem);
+    void addPresent(Present present);
+
+    Present getPresentForId(int id) throws ResourceNotFoundException;
+    WishItem getWishlistItemForId(int id) throws ResourceNotFoundException;
 
     void deletePresentForId(int id) throws ResourceNotFoundException;
     void deleteWishlistItemForId(int id) throws ResourceNotFoundException;

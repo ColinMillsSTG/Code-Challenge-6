@@ -1,5 +1,7 @@
 package com.codechallenges.service;
 
+import com.codechallenges.entity.Present;
+import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,8 +21,12 @@ import java.util.Map;
 @Service
 public class PresentServiceImpl implements PresentService{
 
-    ArrayList<Map<String,String>> presents = new ArrayList<>();
-    ArrayList<Map<String,String>> wishlist = new ArrayList<>();
+    /**
+     * @Todo: change out arraylists for JPA repos
+     */
+
+    ArrayList<Present> presents = new ArrayList<>();
+    ArrayList<WishItem> wishlist = new ArrayList<>();
 
     public ArrayList<String> guessPresents(){
 
@@ -28,9 +34,9 @@ public class PresentServiceImpl implements PresentService{
 
         try {
             //check list of presents against wishlist
-            for(Map<String,String> wishListItem : wishlist) {
+            for(WishItem wishListItem : wishlist) {
                 if(isPresentPresent(wishListItem, presents)){
-                    confirmedPresents.add(wishListItem.get("name")); //I'm assuming we know what the thing is called
+                    confirmedPresents.add(wishListItem.getName()); //I'm assuming we know what the thing is called
                 }
             }
         }catch(Exception e){
@@ -40,41 +46,75 @@ public class PresentServiceImpl implements PresentService{
         return confirmedPresents;
     }
 
-    public ArrayList<String> guessPresents(ArrayList<Map<String,String>> wishlist){
+    public ArrayList<String> guessPresents(ArrayList<WishItem> wishlist){
 
         setWishlist(wishlist);
 
         return guessPresents();
     }
 
-    public void setWishlist(ArrayList<Map<String,String>> wishlist){
-        this.wishlist = wishlist;
-    }
+    public ArrayList<WishItem> getWishlist() { return wishlist; }
 
-    public void setPresents(ArrayList<Map<String,String>> presents){
-        this.presents = presents;
-    }
-
-    public ArrayList<Map<String,String>> getWishlist() { return wishlist; }
-
-    public ArrayList<Map<String,String>> getPresents(){
+    public ArrayList<Present> getPresents(){
         return presents;
     }
 
-    public Map<String,String> getWishlistItemForId(int id) throws ResourceNotFoundException{
-        return wishlist.get(id);
+    public void setWishlist(ArrayList<WishItem> wishlist){
+        this.wishlist = wishlist;
     }
 
-    public Map<String,String> getPresentForId(int id) throws ResourceNotFoundException{
-        return presents.get(id);
+    public void setPresents(ArrayList<Present> presents){
+        this.presents = presents;
+    }
+
+    public void addWishlistItem(WishItem wishItem){
+        this.wishlist.add(wishItem);
+    }
+
+    public void addPresent(Present present){
+        this.presents.add(present);
+    }
+
+    public WishItem getWishlistItemForId(int id) throws ResourceNotFoundException{
+        for(WishItem wishItem : wishlist) {
+            if(wishItem.getId() == id) {
+                return wishItem;
+            }
+        }
+
+        throw new ResourceNotFoundException();
+    }
+
+    public Present getPresentForId(int id) throws ResourceNotFoundException{
+        for(Present present : presents) {
+            if(present.getId() == id) {
+                return present;
+            }
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     public void deleteWishlistItemForId(int id) throws ResourceNotFoundException{
-        wishlist.remove(id);
+        for(WishItem wishItem : wishlist) {
+            if(wishItem.getId() == id) {
+                wishlist.remove(wishItem);
+                return;
+            }
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     public void deletePresentForId(int id) throws ResourceNotFoundException{
-        presents.remove(id);
+        for(Present present : presents) {
+            if(present.getId() == id) {
+                presents.remove(present);
+                return;
+            }
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     public void clearWishlist(){
@@ -86,19 +126,29 @@ public class PresentServiceImpl implements PresentService{
     }
 
     //Logic methods
-    private Boolean isPresentPresent(Map<String,String> wishListItem, ArrayList<Map<String, String>> presents){
+    private Boolean isPresentPresent(WishItem wishListItem, ArrayList<Present> presents){
 
-        for(Map<String,String> present : presents){ // For each present we shook
+        for(Present present : presents){ // For each present we shook
             Boolean isPresent = true;
 
-            for(String quality : present.keySet()){ // check its qualities against our wishlist
-                if(!present.get(quality).equals(wishListItem.get(quality))){// Present isn't like the wishlist item
-                    isPresent = false;
-                }
+            if(present.getClatters()!= null && wishListItem.getClatters() != null && !present.getClatters().equals(wishListItem.getClatters())){
+                isPresent = false;
+            }
+
+            if(present.getSize()!= null && wishListItem.getSize() != null && !present.getSize().equals(wishListItem.getSize())){
+                isPresent = false;
+            }
+
+            if(present.getWeight()!= null && wishListItem.getWeight() != null && !present.getWeight().equals(wishListItem.getWeight())){
+                isPresent = false;
+            }
+
+            if(present.getGiver()!= null && wishListItem.getGiver() != null && !present.getGiver().equals((wishListItem.getGiver()))){
+                isPresent = false;
             }
 
             if(isPresent){
-                return isPresent;
+                return true;
             }
 
         }
