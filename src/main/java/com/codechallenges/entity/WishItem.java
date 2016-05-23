@@ -1,9 +1,6 @@
 package com.codechallenges.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by colin.mills on 5/9/2016.

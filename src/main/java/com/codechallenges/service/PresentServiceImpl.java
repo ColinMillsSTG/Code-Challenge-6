@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,12 +26,12 @@ public class PresentServiceImpl implements PresentService{
      * @Todo: change out arraylists for JPA repos
      */
 
-    ArrayList<Present> presents = new ArrayList<>();
-    ArrayList<WishItem> wishlist = new ArrayList<>();
+    List<Present> presents = new ArrayList<>();
+    List<WishItem> wishlist = new ArrayList<>();
 
-    public ArrayList<String> guessPresents(){
+    public List<String> guessPresents(){
 
-        ArrayList<String> confirmedPresents = new ArrayList<>();
+        List<String> confirmedPresents = new ArrayList<>();
 
         try {
             //check list of presents against wishlist
@@ -46,24 +47,24 @@ public class PresentServiceImpl implements PresentService{
         return confirmedPresents;
     }
 
-    public ArrayList<String> guessPresents(ArrayList<WishItem> wishlist){
+    public List<String> guessPresents(List<WishItem> wishlist){
 
         setWishlist(wishlist);
 
         return guessPresents();
     }
 
-    public ArrayList<WishItem> getWishlist() { return wishlist; }
+    public List<WishItem> getWishlist() { return wishlist; }
 
-    public ArrayList<Present> getPresents(){
+    public List<Present> getPresents(){
         return presents;
     }
 
-    public void setWishlist(ArrayList<WishItem> wishlist){
+    public void setWishlist(List<WishItem> wishlist){
         this.wishlist = wishlist;
     }
 
-    public void setPresents(ArrayList<Present> presents){
+    public void setPresents(List<Present> presents){
         this.presents = presents;
     }
 
@@ -126,7 +127,7 @@ public class PresentServiceImpl implements PresentService{
     }
 
     //Logic methods
-    private Boolean isPresentPresent(WishItem wishListItem, ArrayList<Present> presents){
+    private Boolean isPresentPresent(WishItem wishListItem, List<Present> presents){
 
         for(Present present : presents){ // For each present we shook
             Boolean isPresent = true;

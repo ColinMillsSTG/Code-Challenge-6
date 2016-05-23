@@ -1,9 +1,11 @@
 package com.codechallenges.repository;
 
+import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,5 +14,4 @@ import java.util.List;
 @Repository
 public interface WishItemJpaRepository extends JpaRepository<WishItem,Long>{
     List<WishItem> findAll();
-    List<WishItem> findBySizeAndClattersAndWeight();
 }

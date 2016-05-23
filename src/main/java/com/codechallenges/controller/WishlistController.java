@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public class WishlistController {
     PresentService presentService;
 
     @RequestMapping(value = "getMatches", method = RequestMethod.GET)
-    public ArrayList<String> getMatches(){
+    public List<String> getMatches(){
         return presentService.guessPresents();
     }
 
@@ -38,8 +39,8 @@ public class WishlistController {
      *
      * Retrieve the list of wishlist items currently in memory.
      */
-    @RequestMapping(value = "presents", method = RequestMethod.GET)
-    public ArrayList<WishItem> getWishlist(){
+    @RequestMapping(value = "wishlist", method = RequestMethod.GET)
+    public List<WishItem> getWishlist(){
         return presentService.getWishlist();
     }
 
@@ -50,7 +51,7 @@ public class WishlistController {
      * Retrieve the list of presents currently in memory.
      */
     @RequestMapping(value = "presents", method = RequestMethod.GET)
-    public ArrayList<Present> getPresents(){
+    public List<Present> getPresents(){
         return presentService.getPresents();
     }
 
@@ -89,12 +90,10 @@ public class WishlistController {
      *
      * Post a new wishlist
      */
-    @RequestMapping(value = "wishlist", method = RequestMethod.POST, consumes = {"application/json"})
-    public ArrayList<String> postWishlist(@RequestBody ArrayList<WishItem> wishlist){
+    @RequestMapping(value = "wishlist/new", method = RequestMethod.POST, consumes = {"application/json"})
+    public void postWishlist(@RequestBody ArrayList<WishItem> wishlist){
 
-        return presentService.guessPresents(wishlist);
-
-        //presentService.setWishlist(wishlist);
+        presentService.setWishlist(wishlist);
 
     }
 
@@ -105,7 +104,7 @@ public class WishlistController {
      *
      * Post a new list of presents
      */
-    @RequestMapping(value = "presents", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "presents/new", method = RequestMethod.POST, consumes = {"application/json"})
     public void postPresents(@RequestBody ArrayList<Present> presents){
 
         presentService.setPresents(presents);
