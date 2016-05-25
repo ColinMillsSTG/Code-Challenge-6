@@ -22,9 +22,12 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/wishlist")
 public class WishlistController {
 
+    /**
+     * @Todo: Change to wishlistService
+     */
     @Autowired
     PresentService presentService;
 
@@ -39,24 +42,13 @@ public class WishlistController {
      *
      * Retrieve the list of wishlist items currently in memory.
      */
-    @RequestMapping(value = "wishlist", method = RequestMethod.GET)
+    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public List<WishItem> getWishlist(){
         return presentService.getWishlist();
     }
 
     /**
      *
-     * @return
-     *
-     * Retrieve the list of presents currently in memory.
-     */
-    @RequestMapping(value = "presents", method = RequestMethod.GET)
-    public List<Present> getPresents(){
-        return presentService.getPresents();
-    }
-
-    /**
-     *
      * @param id
      * @return
      *
@@ -64,23 +56,9 @@ public class WishlistController {
      *
      * Returns 404 if no such present exists.
      */
-    @RequestMapping(value = "wishlist/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public WishItem getWishItemForId(@RequestParam int id){
         return presentService.getWishlistItemForId(id);
-    }
-
-    /**
-     *
-     * @param id
-     * @return
-     *
-     * Given a present ID, find a matching present.
-     *
-     * Returns 404 if no such present exists.
-     */
-    @RequestMapping(value = "presents/{id}", method = RequestMethod.GET)
-    public Present getPresentForId(@RequestParam int id){
-        return presentService.getPresentForId(id);
     }
 
     /**
@@ -90,7 +68,7 @@ public class WishlistController {
      *
      * Post a new wishlist
      */
-    @RequestMapping(value = "wishlist/new", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = {"application/json"})
     public void postWishlist(@RequestBody ArrayList<WishItem> wishlist){
 
         presentService.setWishlist(wishlist);
@@ -98,40 +76,15 @@ public class WishlistController {
     }
 
     /**
-     *
-     * @param presents
-     * @return
-     *
-     * Post a new list of presents
-     */
-    @RequestMapping(value = "presents/new", method = RequestMethod.POST, consumes = {"application/json"})
-    public void postPresents(@RequestBody ArrayList<Present> presents){
-
-        presentService.setPresents(presents);
-
-    }
-
-    /**
      * Add a wishlist item to the existing list
      * @param wishItem
      */
-    @RequestMapping(value = "wishlist", method = RequestMethod.PUT, consumes = {"application/json"})
+    @RequestMapping(value = "/add", method = RequestMethod.PUT, consumes = {"application/json"})
     public void addWishListItem(WishItem wishItem){
         presentService.addWishlistItem(wishItem);
     }
 
     /**
-     * Add a present item to the existing list
-     * @param present
-     */
-    @RequestMapping(value = "presents", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void addPresent(Present present){
-        presentService.addPresent(present);
-    }
-
-    //add present
-
-    /**
      *
      * @param id
      *
@@ -139,21 +92,7 @@ public class WishlistController {
      *
      * Returns 404 if no such present exists.
      */
-    @RequestMapping(value = "presents/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public void deletePresent(@RequestParam int id){
-            presentService.deletePresentForId(id);
-    }
-
-    /**
-     *
-     * @param id
-     *
-     * Given a present ID, delete the matching present.
-     *
-     * Returns 404 if no such present exists.
-     */
-    @RequestMapping(value = "wishlist/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public void deleteWishItem(@RequestParam int id){
             presentService.deleteWishlistItemForId(id);
