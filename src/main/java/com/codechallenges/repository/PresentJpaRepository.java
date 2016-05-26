@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface PresentJpaRepository extends JpaRepository<Present, Long> {
+public interface PresentJpaRepository extends JpaRepository<Present, Integer> {
 }

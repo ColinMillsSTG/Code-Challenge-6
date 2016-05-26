@@ -28,11 +28,11 @@ public interface PresentService {
     void addWishlistItem(WishItem wishItem);
     void addPresent(Present present);
 
-    Present getPresentForId(int id) throws ResourceNotFoundException;
-    WishItem getWishlistItemForId(int id) throws ResourceNotFoundException;
+    Present getPresentForId(Integer id) throws ResourceNotFoundException;
+    WishItem getWishlistItemForId(Integer id) throws ResourceNotFoundException;
 
-    void deletePresentForId(int id) throws ResourceNotFoundException;
-    void deleteWishlistItemForId(int id) throws ResourceNotFoundException;
+    void deletePresentForId(Integer id) throws ResourceNotFoundException;
+    void deleteWishlistItemForId(Integer id) throws ResourceNotFoundException;
 
     void clearPresents();
     void clearWishlist();

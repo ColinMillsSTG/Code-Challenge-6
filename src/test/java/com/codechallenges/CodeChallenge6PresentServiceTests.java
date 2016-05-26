@@ -4,7 +4,6 @@ import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.service.PresentService;
-import com.codechallenges.service.PresentServiceImpl;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -25,7 +24,7 @@ import java.util.StringTokenizer;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PresentServiceImpl.class)
+@SpringApplicationConfiguration(classes = PresentService.class)
 @WebAppConfiguration
 public class CodeChallenge6PresentServiceTests {
 

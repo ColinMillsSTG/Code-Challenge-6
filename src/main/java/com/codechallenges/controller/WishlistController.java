@@ -1,19 +1,12 @@
 package com.codechallenges.controller;
 
-import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
-import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.service.PresentService;
-import org.omg.CORBA.Request;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by colin.mills on 4/25/2016.
