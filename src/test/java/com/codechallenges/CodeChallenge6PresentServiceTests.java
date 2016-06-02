@@ -4,18 +4,20 @@ import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.service.PresentService;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * Created by colin.mills on 4/27/2016.
@@ -28,8 +30,13 @@ import java.util.StringTokenizer;
 @WebAppConfiguration
 public class CodeChallenge6PresentServiceTests {
 
-    @Resource
+    @Mock
     PresentService presentService;
+
+    @Before
+    public void setupMock(){
+        MockitoAnnotations.initMocks(this);
+    }
 
     /**
      *
@@ -108,8 +115,8 @@ public class CodeChallenge6PresentServiceTests {
         ArrayList<Present> presents = new ArrayList<>();
         ArrayList<String> expected = new ArrayList<>();
 
-        presentService.setWishlist(wishlist);
-        presentService.setPresents(presents);
+        presentService.addWishItems(wishlist);
+        presentService.addPresents(presents);
 
         assertEquals(expected,presentService.guessPresents());
     }
@@ -127,8 +134,8 @@ public class CodeChallenge6PresentServiceTests {
         expected.add("Mini Puzzle");
         expected.add("Toy Car");
 
-        presentService.setWishlist(wishlist);
-        presentService.setPresents(presents);
+        presentService.addWishItems(wishlist);
+        presentService.addPresents(presents);
 
         assertEquals(expected, presentService.guessPresents());
     }
@@ -138,7 +145,7 @@ public class CodeChallenge6PresentServiceTests {
 
         ArrayList<WishItem> wishItems = getWishlistGoodData();
 
-        presentService.setWishlist(wishItems);
+        presentService.addWishItems(wishItems);
 
         assertEquals(wishItems,presentService.getWishlist());
 
@@ -149,7 +156,7 @@ public class CodeChallenge6PresentServiceTests {
 
         ArrayList<Present> presents = getPresentsGoodData();
 
-        presentService.setPresents(presents);
+        presentService.addPresents(presents);
 
         assertEquals(presents,presentService.getPresents());
 
@@ -162,10 +169,12 @@ public class CodeChallenge6PresentServiceTests {
 
         WishItem addedItem = new WishItem().setName("Laptop").setClatters("no").setSize("medium").setWeight("light");
 
-        presentService.setWishlist(wishItems);
-        presentService.addWishlistItem(addedItem);
+        presentService.addWishItems(wishItems);
+        presentService.replaceWishItem(addedItem);
 
         wishItems.add(addedItem);
+
+        when(presentService.getWishlist()).thenReturn(wishItems);
 
         assertEquals(wishItems,presentService.getWishlist());
 
@@ -178,8 +187,8 @@ public class CodeChallenge6PresentServiceTests {
 
         Present addedItem = new Present().setClatters("no").setSize("medium").setWeight("light");
 
-        presentService.setPresents(presents);
-        presentService.addPresent(addedItem);
+        presentService.addPresents(presents);
+        presentService.replacePresent(addedItem);
 
         presents.add(addedItem);
 
@@ -190,7 +199,7 @@ public class CodeChallenge6PresentServiceTests {
     @Test
     public void testGetWishlistItemForId(){
 
-        presentService.setWishlist(getWishlistGoodData());
+        presentService.addWishItems(getWishlistGoodData());
 
         WishItem wishItem = new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
@@ -201,7 +210,7 @@ public class CodeChallenge6PresentServiceTests {
     @Test
     public void testGetPresentForId(){
 
-        presentService.setPresents(getPresentsGoodData());
+        presentService.addPresents(getPresentsGoodData());
 
         Present present = new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
@@ -214,7 +223,7 @@ public class CodeChallenge6PresentServiceTests {
 
         ArrayList<String> expected = new ArrayList<>();
 
-        presentService.setWishlist(getWishlistGoodData());
+        presentService.addWishItems(getWishlistGoodData());
 
         presentService.deleteWishlistItemForId(0);
 
@@ -227,7 +236,7 @@ public class CodeChallenge6PresentServiceTests {
 
         Present expected = new Present();
 
-        presentService.setPresents(getPresentsGoodData());
+        presentService.addPresents(getPresentsGoodData());
 
         presentService.deletePresentForId(0);
 
@@ -240,7 +249,7 @@ public class CodeChallenge6PresentServiceTests {
 
         ArrayList<WishItem> expected = new ArrayList<>();
 
-        presentService.setWishlist(getWishlistGoodData());
+        presentService.addWishItems(getWishlistGoodData());
 
         presentService.clearWishlist();
 
@@ -253,7 +262,7 @@ public class CodeChallenge6PresentServiceTests {
 
         ArrayList<Present> expected = new ArrayList<>();
 
-        presentService.setPresents(getPresentsGoodData());
+        presentService.addPresents(getPresentsGoodData());
 
         presentService.clearPresents();
 

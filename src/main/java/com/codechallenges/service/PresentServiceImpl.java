@@ -30,16 +30,136 @@ public class PresentServiceImpl implements PresentService {
     @Autowired
     PresentJpaRepository presentJpaRepository;
 
-    List<WishItem> wishlist;
-    List<Present> presents;
+    /*
+    Get one
+     */
+    public WishItem getWishlistItemForId(Integer id) throws ResourceNotFoundException{
 
-    @PostConstruct
-    private void init(){
-        wishlist = wishItemJpaRepository.findAll();
-        presents = presentJpaRepository.findAll();
+        return wishItemJpaRepository.findOne(id);
+
     }
 
+    public Present getPresentForId(Integer id) throws ResourceNotFoundException{
+
+        return presentJpaRepository.findOne(id);
+
+    }
+
+    /*
+    Get all
+     */
+    public List<WishItem> getWishlist() { return wishItemJpaRepository.findAll(); }
+
+    public List<Present> getPresents(){
+        return presentJpaRepository.findAll();
+    }
+
+    public void addWishItems(List<WishItem> wishlist){
+        wishItemJpaRepository.save(wishlist);
+    }
+
+    public void addPresents(List<Present> presents){
+        presentJpaRepository.save(presents);
+    }
+
+    /*
+    Post collection
+     */
+    public void replaceWishItem(WishItem wishItem){
+        ArrayList<WishItem> wishItems = new ArrayList<>();
+        wishItems.add(wishItem);
+        wishItemJpaRepository.save(wishItem);
+    }
+
+    public void replacePresent(Present present){
+        ArrayList<Present> presents = new ArrayList<>();
+        presents.add(present);
+        presentJpaRepository.save(presents);
+    }
+
+    /*
+    Post one
+     */
+    public void updateWishlistForId(WishItem wishItem, int id){
+        WishItem updatedItem = wishItemJpaRepository.findOne(id);
+
+        if(wishItem.getClatters() != null){
+            updatedItem.setClatters(wishItem.getClatters());
+        }
+
+        if(wishItem.getWeight() != null){
+            updatedItem.setWeight(wishItem.getWeight());
+        }
+
+        if(wishItem.getGiver() != null){
+            updatedItem.setGiver(wishItem.getGiver());
+        }
+
+        if(wishItem.getName() != null){
+            updatedItem.setName(wishItem.getName());
+        }
+
+
+        if(wishItem.getSize() != null){
+            updatedItem.setSize(wishItem.getSize());
+        }
+
+        wishItemJpaRepository.save(updatedItem);
+    }
+
+    public void updatePresentForId(Present present, int id){
+        Present updatedItem = presentJpaRepository.findOne(id);
+
+        if(present.getClatters() != null){
+            updatedItem.setClatters(present.getClatters());
+        }
+
+        if(present.getWeight() != null){
+            updatedItem.setWeight(present.getWeight());
+        }
+
+        if(present.getGiver() != null){
+            updatedItem.setGiver(present.getGiver());
+        }
+
+        if(present.getSize() != null){
+            updatedItem.setSize(present.getSize());
+        }
+
+        presentJpaRepository.save(updatedItem);
+    }
+
+    /*
+    Put one
+     */
+
+    /*
+    Delete one
+     */
+    public void deleteWishlistItemForId(Integer id) throws ResourceNotFoundException{
+        wishItemJpaRepository.delete(id);
+    }
+
+    public void deletePresentForId(Integer id) throws ResourceNotFoundException{
+        presentJpaRepository.delete(id);
+    }
+
+    /*
+    Delete all
+     */
+    public void clearWishlist(){
+        wishItemJpaRepository.deleteAll();
+    }
+
+    public void clearPresents(){
+        presentJpaRepository.deleteAll();
+    }
+
+    //Logic methods
     public List<String> guessPresents(){
+
+        List<WishItem> wishlist = wishItemJpaRepository.findAll();
+        List<Present> presents = presentJpaRepository.findAll();
 
         List<String> confirmedPresents = new ArrayList<>();
 
@@ -59,66 +179,11 @@ public class PresentServiceImpl implements PresentService {
 
     public List<String> guessPresents(List<WishItem> wishlist){
 
-        setWishlist(wishlist);
+        addWishItems(wishlist);
 
         return guessPresents();
     }
 
-    public List<WishItem> getWishlist() { return wishItemJpaRepository.findAll(); }
-
-    public List<Present> getPresents(){
-        return presentJpaRepository.findAll();
-    }
-
-    public void setWishlist(List<WishItem> wishlist){
-        wishItemJpaRepository.save(wishlist);
-    }
-
-    public void setPresents(List<Present> presents){
-        presentJpaRepository.save(presents);
-    }
-
-    public void addWishlistItem(WishItem wishItem){
-        ArrayList<WishItem> wishItems = new ArrayList<>();
-        wishItems.add(wishItem);
-        wishItemJpaRepository.save(wishItem);
-    }
-
-    public void addPresent(Present present){
-        ArrayList<Present> presents = new ArrayList<>();
-        presents.add(present);
-        presentJpaRepository.save(presents);
-    }
-
-    public WishItem getWishlistItemForId(Integer id) throws ResourceNotFoundException{
-
-        return wishItemJpaRepository.findOne(id);
-
-    }
-
-    public Present getPresentForId(Integer id) throws ResourceNotFoundException{
-
-        return presentJpaRepository.findOne(id);
-
-    }
-
-    public void deleteWishlistItemForId(Integer id) throws ResourceNotFoundException{
-        wishItemJpaRepository.delete(id);
-    }
-
-    public void deletePresentForId(Integer id) throws ResourceNotFoundException{
-        presentJpaRepository.delete(id);
-    }
-
-    public void clearWishlist(){
-        wishItemJpaRepository.deleteAll();
-    }
-
-    public void clearPresents(){
-        presentJpaRepository.deleteAll();
-    }
-
-    //Logic methods
     private Boolean isPresentPresent(WishItem wishListItem, List<Present> presents){
 
         for(Present present : presents){ // For each present we shook

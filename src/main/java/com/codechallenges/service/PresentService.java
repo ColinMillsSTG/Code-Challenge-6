@@ -22,14 +22,17 @@ public interface PresentService {
     List<Present> getPresents();
     List<WishItem> getWishlist();
 
-    void setWishlist(List<WishItem> wishlist);
-    void setPresents(List<Present> presents);
-
-    void addWishlistItem(WishItem wishItem);
-    void addPresent(Present present);
-
     Present getPresentForId(Integer id) throws ResourceNotFoundException;
     WishItem getWishlistItemForId(Integer id) throws ResourceNotFoundException;
+
+    void addWishItems(List<WishItem> wishlist);
+    void addPresents(List<Present> presents);
+
+    void updateWishlistForId(WishItem wishItem, int id);
+    void updatePresentForId(Present present, int id);
+
+    void replaceWishItem(WishItem wishItem);
+    void replacePresent(Present present);
 
     void deletePresentForId(Integer id) throws ResourceNotFoundException;
     void deleteWishlistItemForId(Integer id) throws ResourceNotFoundException;

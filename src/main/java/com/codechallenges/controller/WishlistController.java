@@ -24,9 +24,9 @@ public class WishlistController {
     @Autowired
     PresentService presentService;
 
-    @RequestMapping(value = "getMatches", method = RequestMethod.GET)
-    public List<String> getMatches(){
-        return presentService.guessPresents();
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public WishItem getWishItem(@RequestParam int id){
+        return presentService.getWishlistItemForId(id);
     }
 
     /**
@@ -35,23 +35,9 @@ public class WishlistController {
      *
      * Retrieve the list of wishlist items currently in memory.
      */
-    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<WishItem> getWishlist(){
         return presentService.getWishlist();
-    }
-
-    /**
-     *
-     * @param id
-     * @return
-     *
-     * Given a present ID, find a matching present.
-     *
-     * Returns 404 if no such present exists.
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public WishItem getWishItemForId(@RequestParam int id){
-        return presentService.getWishlistItemForId(id);
     }
 
     /**
@@ -61,10 +47,25 @@ public class WishlistController {
      *
      * Post a new wishlist
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = {"application/json"})
-    public void postWishlist(@RequestBody ArrayList<WishItem> wishlist){
+    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = {"application/json"})
+    public void addWishItems(@RequestBody ArrayList<WishItem> wishlist){
 
-        presentService.setWishlist(wishlist);
+        presentService.addWishItems(wishlist);
+
+    }
+
+    /**
+     *
+     * @param wishlist
+     * @param id
+     * @return
+     *
+     * Post a new wishlist
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
+    public void updateWishItem(@RequestBody WishItem wishlist, @RequestParam int id){
+
+        presentService.updateWishlistForId(wishlist, id);
 
     }
 
@@ -72,9 +73,9 @@ public class WishlistController {
      * Add a wishlist item to the existing list
      * @param wishItem
      */
-    @RequestMapping(value = "/add", method = RequestMethod.PUT, consumes = {"application/json"})
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
     public void addWishListItem(WishItem wishItem){
-        presentService.addWishlistItem(wishItem);
+        presentService.replaceWishItem(wishItem);
     }
 
     /**

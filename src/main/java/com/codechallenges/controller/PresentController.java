@@ -1,12 +1,10 @@
 package com.codechallenges.controller;
 
 import com.codechallenges.entity.Present;
-import com.codechallenges.entity.WishItem;
 import com.codechallenges.service.PresentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/present")
+@RequestMapping("/presents")
 public class PresentController {
 
     @Autowired
@@ -27,7 +25,7 @@ public class PresentController {
      *
      * Retrieve the list of presents currently in memory.
      */
-    @RequestMapping(value = "/getAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<Present> getPresents(){
         return presentService.getPresents();
     }
@@ -53,10 +51,25 @@ public class PresentController {
      *
      * Post a new list of presents
      */
-    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = {"application/json"})
+    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = {"application/json"})
     public void postPresents(@RequestBody ArrayList<Present> presents){
 
-        presentService.setPresents(presents);
+        presentService.addPresents(presents);
+
+    }
+
+    /**
+     *
+     * @param present
+     * @param id
+     * @return
+     *
+     * Post a new list of presents
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
+    public void updatePresent(@RequestBody Present present, @RequestParam int id){
+
+        presentService.updatePresentForId(present, id);
 
     }
 
@@ -64,9 +77,9 @@ public class PresentController {
      * Add a present item to the existing list
      * @param present
      */
-    @RequestMapping(value = "/add", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void addPresent(Present present){
-        presentService.addPresent(present);
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
+    public void replacePresent(Present present){
+        presentService.replacePresent(present);
     }
 
     //add present
