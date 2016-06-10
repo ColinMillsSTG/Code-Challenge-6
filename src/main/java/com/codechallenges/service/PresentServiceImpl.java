@@ -83,6 +83,10 @@ public class PresentServiceImpl implements PresentService {
     public void updateWishlistForId(WishItem wishItem, int id){
         WishItem updatedItem = wishItemJpaRepository.findOne(id);
 
+        if(updatedItem == null){
+            throw new ResourceNotFoundException();
+        }
+
         if(wishItem.getClatters() != null){
             updatedItem.setClatters(wishItem.getClatters());
         }

@@ -1,11 +1,13 @@
 package com.codechallenges;
 
+import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.service.PresentService;
 import com.codechallenges.service.PresentServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,9 +23,9 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by colin.mills on 6/3/2016.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PresentService.class)
-@WebAppConfiguration
+
+@RunWith(MockitoJUnitRunner.class)
+//@WebAppConfiguration
 @IntegrationTest
 public class CodeChallenge6WishlistControllerTests {
 
@@ -135,7 +137,7 @@ public class CodeChallenge6WishlistControllerTests {
     }
 
     @Test
-    private void testUpdateWishItemFailsWhenUpdatingNonextantItem(){
+    public void testUpdateWishItemFailsWhenUpdatingNonextantItem(){
 
         WishItem wishItem = new WishItem().setGiver("Colin").setId(3);
 
@@ -143,7 +145,7 @@ public class CodeChallenge6WishlistControllerTests {
             presentService.updateWishlistForId(wishItem, 1);
 
         }catch(Exception e){
-            //This is supposed to happen
+            //This is expected
         }
 
     }
@@ -162,14 +164,16 @@ public class CodeChallenge6WishlistControllerTests {
 
     /**
      *
-     * @param id
-     *
      * Given a present ID, delete the matching present.
      *
      * Returns 404 if no such present exists.
      */
     @Test
-    public void deleteWishItem(@RequestParam int id){
+    public void deleteWishItem(){
+        int id = 0;
+
+        presentService.addWishItems(getWishlistGoodData());
+
         presentService.deleteWishlistItemForId(id);
 
         assertEquals(null, presentService.getWishlist());
