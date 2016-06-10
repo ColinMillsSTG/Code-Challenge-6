@@ -3,19 +3,23 @@ package com.codechallenges;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
+import com.codechallenges.repository.PresentJpaRepository;
+import com.codechallenges.repository.WishItemJpaRepository;
 import com.codechallenges.service.PresentService;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.ArrayList;
 
@@ -25,13 +29,19 @@ import java.util.ArrayList;
  * Tests to check PresentServiceImpl functionality.
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PresentService.class)
-@WebAppConfiguration
-public class CodeChallenge6PresentServiceTests {
+@RunWith(MockitoJUnitRunner.class)
+//@SpringApplicationConfiguration(classes = PresentService.class)
+//@WebAppConfiguration
+public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
     @Mock
     PresentService presentService;
+
+    @Autowired
+    PresentJpaRepository presentJpaRepository;
+
+    @Autowired
+    WishItemJpaRepository wishItemJpaRepository;
 
     @Before
     public void setupMock(){
@@ -122,7 +132,7 @@ public class CodeChallenge6PresentServiceTests {
     }
 
     /**
-     * This test shold return the expected presents.
+     * This test should return the expected presents.
      */
     @Test
     public void testGuessPresentsGoodData(){

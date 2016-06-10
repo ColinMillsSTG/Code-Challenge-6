@@ -82,7 +82,7 @@ public class Present{
         result = 31 * result + (getSize() != null ? getSize().hashCode() : 0);
         result = 31 * result + (getClatters() != null ? getClatters().hashCode() : 0);
         result = 31 * result + (getWeight() != null ? getWeight().hashCode() : 0);
-        result = 31 * result + getGiver().hashCode();
+        result = 31 * result + (getGiver() != null ? getGiver().hashCode() : 0);
         return result;
     }
 }

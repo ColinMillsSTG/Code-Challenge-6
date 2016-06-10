@@ -24,6 +24,11 @@ public class WishlistController {
     @Autowired
     PresentService presentService;
 
+    /**
+     * Returns the wishlist item with the given matching ID
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public WishItem getWishItem(@RequestParam int id){
         return presentService.getWishlistItemForId(id);
