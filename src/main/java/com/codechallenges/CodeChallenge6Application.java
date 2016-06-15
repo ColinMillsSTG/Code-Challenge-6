@@ -28,9 +28,4 @@ public class CodeChallenge6Application {
 		return registration;
 	}
 
-	@Bean
-	public PresentServiceImpl presentService1(PresentJpaRepository presentJpaRepository, WishItemJpaRepository wishItemJpaRepository){
-		return new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
-	}
-
 }

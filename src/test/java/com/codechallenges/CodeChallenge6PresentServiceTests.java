@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
+    @Autowired
     PresentServiceImpl specimen;
 
     @Mock
@@ -43,6 +44,7 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
     @Before
     public void setup(){
+
         MockitoAnnotations.initMocks(this);
 
         specimen = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
@@ -120,8 +122,8 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
         ArrayList<Present> presents = new ArrayList<>();
         ArrayList<String> expected = new ArrayList<>();
 
-        specimen.addWishItems(wishlist);
-        specimen.addPresents(presents);
+        when(wishItemJpaRepository.findAll()).thenReturn(wishlist);
+        when(presentJpaRepository.findAll()).thenReturn(presents);
 
         assertEquals(expected, specimen.guessPresents());
     }
@@ -139,20 +141,26 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
         expected.add("Mini Puzzle");
         expected.add("Toy Car");
 
-        specimen.addWishItems(wishlist);
-        specimen.addPresents(presents);
+        when(wishItemJpaRepository.findAll()).thenReturn(wishlist);
+        when(presentJpaRepository.findAll()).thenReturn(presents);
 
         assertEquals(expected, specimen.guessPresents());
     }
+
+    /*
+    Test get methods
+     */
 
     @Test
     public void testSetAndGetWishlist(){
 
         ArrayList<WishItem> wishItems = getWishlistGoodData();
 
+        when(wishItemJpaRepository.save(wishItems)).thenReturn(wishItems);
+
         specimen.addWishItems(wishItems);
 
-        assertEquals(wishItems, specimen.getWishlist());
+        verify(wishItemJpaRepository, times(1)).save(wishItems);
 
     }
 
@@ -161,7 +169,7 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         ArrayList<Present> presents = getPresentsGoodData();
 
-        when(presentJpaRepository.save(any())).thenReturn(null);
+        when(presentJpaRepository.save(presents)).thenReturn(presents);
 
         specimen.addPresents(presents);
 
@@ -192,62 +200,58 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         ArrayList<Present> presents = getPresentsGoodData();
 
-        Present addedItem = new Present().setClatters("no").setSize("medium").setWeight("light");
-
         specimen.addPresents(presents);
-        specimen.replacePresent(addedItem);
 
-        presents.add(addedItem);
-
-        assertEquals(presents, specimen.getPresents());
-
+        verify(presentJpaRepository, times(1)).save(presents);
     }
 
     @Test
     public void testGetWishlistItemForId(){
 
-        specimen.addWishItems(getWishlistGoodData());
+        int id = 0;
 
-        WishItem wishItem = new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
+        WishItem wishItem = new WishItem().setId(id).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
-        assertEquals(wishItem, specimen.getWishlistItemForId(0));
+        when(wishItemJpaRepository.findOne(id)).thenReturn(wishItem);
+
+        assertEquals(wishItem, specimen.getWishlistItemForId(id));
+        verify(wishItemJpaRepository, times(1)).findOne(id);
 
     }
 
     @Test
     public void testGetPresentForId(){
 
-        specimen.addPresents(getPresentsGoodData());
+        int id = 0;
 
         Present present = new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
-        assertEquals(present, specimen.getPresentForId(0));
+        when(presentJpaRepository.findOne(id)).thenReturn(present);
+
+        assertEquals(present, specimen.getPresentForId(id));
+        verify(presentJpaRepository, times(1)).findOne(id);
 
     }
 
-    @Test (expected = ResourceNotFoundException.class)
-    public void testDeleteWishlistItem(){
+    @Test
+    public void testDeleteWishlistItemForId(){
 
-        ArrayList<String> expected = new ArrayList<>();
+        int id = 0;
 
-        specimen.addWishItems(getWishlistGoodData());
+        specimen.deleteWishlistItemForId(id);
 
-        specimen.deleteWishlistItemForId(0);
-
-        specimen.getWishlistItemForId(0);
+        verify(wishItemJpaRepository, times(1)).delete(id);
 
     }
 
-    @Test (expected = ResourceNotFoundException.class)
+    @Test
     public void testDeletePresentForId(){
 
-        Present expected = new Present();
+        int id = 0;
 
-        specimen.addPresents(getPresentsGoodData());
+        specimen.deletePresentForId(id);
 
-        specimen.deletePresentForId(0);
-
-        assertEquals(expected, specimen.getPresentForId(0));
+        verify(presentJpaRepository, times(1)).delete(id);
 
     }
 

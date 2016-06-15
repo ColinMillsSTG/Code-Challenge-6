@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by colin.mills on 4/25/2016.
@@ -20,13 +21,16 @@ import java.util.List;
 @Service
 public class PresentServiceImpl implements PresentService {
 
-    @Autowired
-    WishItemJpaRepository wishItemJpaRepository;
+    private final WishItemJpaRepository wishItemJpaRepository;
+
+    private final PresentJpaRepository presentJpaRepository;
 
     @Autowired
-    PresentJpaRepository presentJpaRepository;
-
     public PresentServiceImpl(PresentJpaRepository presentJpaRepository, WishItemJpaRepository wishItemJpaRepository){
+
+        Objects.requireNonNull(wishItemJpaRepository,"wishItemJpaRepository must not be null");
+        Objects.requireNonNull(presentJpaRepository,"presentJpaRepository must not be null");
+
         this.presentJpaRepository = presentJpaRepository;
         this.wishItemJpaRepository = wishItemJpaRepository;
     }

@@ -1,39 +1,52 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.WishlistController;
+import com.codechallenges.controller.PresentController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
-import com.codechallenges.service.PresentService;
+import com.codechallenges.repository.PresentJpaRepository;
+import com.codechallenges.repository.WishItemJpaRepository;
 import com.codechallenges.service.PresentServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.bind.annotation.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by colin.mills on 6/3/2016.
  */
 
-@RunWith(MockitoJUnitRunner.class)
-//@WebAppConfiguration
-@IntegrationTest
-public class CodeChallenge6WishlistControllerTests {
+public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
 
+    private MockMvc mockMvc;
+
+    @Autowired
+    PresentController specimen;
+
+    @Autowired
     PresentServiceImpl presentService;
 
-    @PostConstruct
+    @Mock
+    PresentJpaRepository presentJpaRepository;
+
+    @Mock
+    WishItemJpaRepository wishItemJpaRepository;
+
+    @Before
     public void setup(){
-        presentService = new PresentServiceImpl();
+        MockitoAnnotations.initMocks(this);
+
+        presentService = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
 
         presentService.addWishItems(getWishlistGoodData());
         presentService.addPresents(getPresentsGoodData());
@@ -81,8 +94,11 @@ public class CodeChallenge6WishlistControllerTests {
      */
     @Test
     public void testGetWishItem(){
+        int id = 0;
 
+        when(presentJpaRepository.findOne(id)).thenReturn(getPresentsGoodData().get(id));
 
+        assertEquals(getPresentsGoodData().get(id), presentService.getPresentForId(id));
 
     }
 
@@ -95,7 +111,11 @@ public class CodeChallenge6WishlistControllerTests {
     @Test
     public void getWishlist(){
 
-        assertEquals(getWishlistGoodData(),presentService.getWishlist());
+        List<WishItem> wishItems = getWishlistGoodData();
+
+        when(wishItemJpaRepository.findAll()).thenReturn(wishItems);
+
+        assertEquals(wishItems, presentService.getWishlist());
 
     }
 
@@ -111,11 +131,13 @@ public class CodeChallenge6WishlistControllerTests {
         ArrayList<WishItem> wishlist = new ArrayList<>();
         WishItem wishItem = new WishItem().setClatters("a bit").setGiver("Colin").setId(4).setName("N64").setSize("small").setWeight("light");
 
+        when(wishItemJpaRepository.save(wishlist)).thenReturn(wishlist);
+
         wishlist.add(wishItem);
 
         presentService.addWishItems(wishlist);
 
-        assertEquals(wishItem, presentService.getWishlistItemForId(4));
+        verify(wishItemJpaRepository, times(1)).save(wishlist);
 
     }
 
@@ -128,11 +150,14 @@ public class CodeChallenge6WishlistControllerTests {
     @Test
     public void testUpdateWishItemWithGoodData(){
 
-        WishItem wishItem = new WishItem().setGiver("Colin").setId(3);
+        int id = 2;
+        WishItem wishItem = new WishItem().setGiver("Colin").setId(id);
 
-        presentService.updateWishlistForId(wishItem, 3);
+        when(wishItemJpaRepository.findOne(id)).thenReturn(getWishlistGoodData().get(id));
 
-        assertEquals("Colin", presentService.getWishlistItemForId(3).getGiver());
+        presentService.updateWishlistForId(wishItem, id);
+
+        assertEquals("Colin", presentService.getWishlistItemForId(id).getGiver());
 
     }
 
@@ -155,27 +180,28 @@ public class CodeChallenge6WishlistControllerTests {
      */
     @Test
     public void testAddWishListItem(){
-        WishItem wishItem = new WishItem().setClatters("a bit").setGiver("Colin").setId(4).setName("N64").setSize("small").setWeight("light");
+        int id = 3;
+
+        WishItem wishItem = new WishItem().setClatters("a bit").setGiver("Colin").setId(id).setName("N64").setSize("small").setWeight("light");
+
+        when(wishItemJpaRepository.save(wishItem)).thenReturn(wishItem);
 
         presentService.replaceWishItem(wishItem);
 
-        assertEquals(wishItem, presentService.getWishlistItemForId(4));
+        verify(wishItemJpaRepository, times(1)).save(wishItem);
     }
 
     /**
      *
      * Given a present ID, delete the matching present.
      *
-     * Returns 404 if no such present exists.
      */
     @Test
     public void deleteWishItem(){
         int id = 0;
 
-        presentService.addWishItems(getWishlistGoodData());
-
         presentService.deleteWishlistItemForId(id);
 
-        assertEquals(null, presentService.getWishlist());
+        verify(wishItemJpaRepository, times(1)).delete(id);
     }
 }
