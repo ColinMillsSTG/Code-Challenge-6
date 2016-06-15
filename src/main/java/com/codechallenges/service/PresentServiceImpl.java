@@ -8,7 +8,6 @@ import com.codechallenges.repository.WishItemJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +20,16 @@ import java.util.List;
 @Service
 public class PresentServiceImpl implements PresentService {
 
-    /**
-     * @Todo: change out arraylists for JPA repos
-     */
     @Autowired
     WishItemJpaRepository wishItemJpaRepository;
 
     @Autowired
     PresentJpaRepository presentJpaRepository;
+
+    public PresentServiceImpl(PresentJpaRepository presentJpaRepository, WishItemJpaRepository wishItemJpaRepository){
+        this.presentJpaRepository = presentJpaRepository;
+        this.wishItemJpaRepository = wishItemJpaRepository;
+    }
 
     /*
     Get one
@@ -156,7 +157,9 @@ public class PresentServiceImpl implements PresentService {
     }
 
     public void clearPresents(){
+
         presentJpaRepository.deleteAll();
+
     }
 
     //Logic methods

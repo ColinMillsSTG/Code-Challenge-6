@@ -1,5 +1,8 @@
 package com.codechallenges;
 
+import com.codechallenges.repository.PresentJpaRepository;
+import com.codechallenges.repository.WishItemJpaRepository;
+import com.codechallenges.service.PresentServiceImpl;
 import org.h2.server.web.WebServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories
+@EnableJpaRepositories(value = "com.codechallenges.repository")
 @PropertySource({"classpath:application.properties"})
 public class CodeChallenge6Application {
 
@@ -23,6 +26,11 @@ public class CodeChallenge6Application {
 		ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
 		registration.addUrlMappings("/console/*");
 		return registration;
+	}
+
+	@Bean
+	public PresentServiceImpl presentService1(PresentJpaRepository presentJpaRepository, WishItemJpaRepository wishItemJpaRepository){
+		return new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
 	}
 
 }

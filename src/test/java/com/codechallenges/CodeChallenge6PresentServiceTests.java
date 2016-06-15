@@ -6,20 +6,16 @@ import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.repository.PresentJpaRepository;
 import com.codechallenges.repository.WishItemJpaRepository;
 import com.codechallenges.service.PresentService;
+import com.codechallenges.service.PresentServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.testng.annotations.BeforeMethod;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -29,30 +25,29 @@ import java.util.ArrayList;
  * Tests to check PresentServiceImpl functionality.
  */
 
-@RunWith(MockitoJUnitRunner.class)
-//@SpringApplicationConfiguration(classes = PresentService.class)
-//@WebAppConfiguration
 public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
-    @Mock
-    PresentService presentService;
+    PresentServiceImpl specimen;
 
-    @Autowired
+    @Mock
     PresentJpaRepository presentJpaRepository;
 
-    @Autowired
+    @Mock
     WishItemJpaRepository wishItemJpaRepository;
-
-    @Before
-    public void setupMock(){
-        MockitoAnnotations.initMocks(this);
-    }
 
     /**
      *
      * Setting up data
      *
      */
+
+    @Before
+    public void setup(){
+        MockitoAnnotations.initMocks(this);
+
+        specimen = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
+
+    }
 
     public ArrayList<WishItem> getWishlistGoodData(){
 
@@ -112,7 +107,7 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
      */
     @Test
     public void testGuessPresentsNullData(){
-        presentService.guessPresents();
+        specimen.guessPresents();
     }
 
     /**
@@ -125,10 +120,10 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
         ArrayList<Present> presents = new ArrayList<>();
         ArrayList<String> expected = new ArrayList<>();
 
-        presentService.addWishItems(wishlist);
-        presentService.addPresents(presents);
+        specimen.addWishItems(wishlist);
+        specimen.addPresents(presents);
 
-        assertEquals(expected,presentService.guessPresents());
+        assertEquals(expected, specimen.guessPresents());
     }
 
     /**
@@ -144,10 +139,10 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
         expected.add("Mini Puzzle");
         expected.add("Toy Car");
 
-        presentService.addWishItems(wishlist);
-        presentService.addPresents(presents);
+        specimen.addWishItems(wishlist);
+        specimen.addPresents(presents);
 
-        assertEquals(expected, presentService.guessPresents());
+        assertEquals(expected, specimen.guessPresents());
     }
 
     @Test
@@ -155,9 +150,9 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         ArrayList<WishItem> wishItems = getWishlistGoodData();
 
-        presentService.addWishItems(wishItems);
+        specimen.addWishItems(wishItems);
 
-        assertEquals(wishItems,presentService.getWishlist());
+        assertEquals(wishItems, specimen.getWishlist());
 
     }
 
@@ -166,9 +161,11 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         ArrayList<Present> presents = getPresentsGoodData();
 
-        presentService.addPresents(presents);
+        when(presentJpaRepository.save(any())).thenReturn(null);
 
-        assertEquals(presents,presentService.getPresents());
+        specimen.addPresents(presents);
+
+        verify(presentJpaRepository, times(1)).save(presents);
 
     }
 
@@ -179,14 +176,14 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         WishItem addedItem = new WishItem().setName("Laptop").setClatters("no").setSize("medium").setWeight("light");
 
-        presentService.addWishItems(wishItems);
-        presentService.replaceWishItem(addedItem);
+        specimen.addWishItems(wishItems);
+        specimen.replaceWishItem(addedItem);
 
         wishItems.add(addedItem);
 
-        when(presentService.getWishlist()).thenReturn(wishItems);
+        when(specimen.getWishlist()).thenReturn(wishItems);
 
-        assertEquals(wishItems,presentService.getWishlist());
+        assertEquals(wishItems, specimen.getWishlist());
 
     }
 
@@ -197,34 +194,34 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         Present addedItem = new Present().setClatters("no").setSize("medium").setWeight("light");
 
-        presentService.addPresents(presents);
-        presentService.replacePresent(addedItem);
+        specimen.addPresents(presents);
+        specimen.replacePresent(addedItem);
 
         presents.add(addedItem);
 
-        assertEquals(presents,presentService.getPresents());
+        assertEquals(presents, specimen.getPresents());
 
     }
 
     @Test
     public void testGetWishlistItemForId(){
 
-        presentService.addWishItems(getWishlistGoodData());
+        specimen.addWishItems(getWishlistGoodData());
 
         WishItem wishItem = new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
-        assertEquals(wishItem, presentService.getWishlistItemForId(0));
+        assertEquals(wishItem, specimen.getWishlistItemForId(0));
 
     }
 
     @Test
     public void testGetPresentForId(){
 
-        presentService.addPresents(getPresentsGoodData());
+        specimen.addPresents(getPresentsGoodData());
 
         Present present = new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
 
-        assertEquals(present, presentService.getPresentForId(0));
+        assertEquals(present, specimen.getPresentForId(0));
 
     }
 
@@ -233,11 +230,11 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         ArrayList<String> expected = new ArrayList<>();
 
-        presentService.addWishItems(getWishlistGoodData());
+        specimen.addWishItems(getWishlistGoodData());
 
-        presentService.deleteWishlistItemForId(0);
+        specimen.deleteWishlistItemForId(0);
 
-        presentService.getWishlistItemForId(0);
+        specimen.getWishlistItemForId(0);
 
     }
 
@@ -246,37 +243,29 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
         Present expected = new Present();
 
-        presentService.addPresents(getPresentsGoodData());
+        specimen.addPresents(getPresentsGoodData());
 
-        presentService.deletePresentForId(0);
+        specimen.deletePresentForId(0);
 
-        assertEquals(expected, presentService.getPresentForId(0));
+        assertEquals(expected, specimen.getPresentForId(0));
 
     }
 
     @Test
     public void testClearWishlist(){
 
-        ArrayList<WishItem> expected = new ArrayList<>();
+        specimen.clearWishlist();
 
-        presentService.addWishItems(getWishlistGoodData());
-
-        presentService.clearWishlist();
-
-        assertEquals(expected, presentService.getWishlist());
+        verify(wishItemJpaRepository, times(1)).deleteAll();
 
     }
 
     @Test
     public void testClearPresents(){
 
-        ArrayList<Present> expected = new ArrayList<>();
+        specimen.clearPresents();
 
-        presentService.addPresents(getPresentsGoodData());
-
-        presentService.clearPresents();
-
-        assertEquals(expected, presentService.getPresents());
+        verify(presentJpaRepository, times(1)).deleteAll();
 
     }
 
