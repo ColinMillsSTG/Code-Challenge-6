@@ -29,8 +29,9 @@ public class WishlistController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public WishItem getWishItem(@RequestParam int id){
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.GET)
+    public @ResponseBody WishItem getWishItem(@RequestParam int id){
         return presentService.getWishlistItemForId(id);
     }
 

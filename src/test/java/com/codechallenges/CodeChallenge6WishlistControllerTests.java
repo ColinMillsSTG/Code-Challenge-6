@@ -1,6 +1,7 @@
 package com.codechallenges;
 
 import com.codechallenges.controller.PresentController;
+import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.repository.PresentJpaRepository;
@@ -11,16 +12,18 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by colin.mills on 6/3/2016.
@@ -29,6 +32,9 @@ import static org.mockito.Mockito.when;
 public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
 
     private MockMvc mockMvc;
+
+    /*@Autowired
+    WebApplicationContext context;*/
 
     @Autowired
     PresentController specimen;
@@ -45,6 +51,9 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
+
+        mockMvc = MockMvcBuilders.standaloneSetup(new WishlistController())
+                .build();
 
         presentService = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
 
@@ -93,12 +102,14 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
      * @return
      */
     @Test
-    public void testGetWishItem(){
+    public void testGetWishItem() throws Exception{
         int id = 0;
 
-        when(presentJpaRepository.findOne(id)).thenReturn(getPresentsGoodData().get(id));
+        when(wishItemJpaRepository.findOne(id)).thenReturn(getWishlistGoodData().get(id));
 
-        assertEquals(getPresentsGoodData().get(id), presentService.getPresentForId(id));
+        mockMvc.perform(get("/wishlist/"+id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
 
     }
 
