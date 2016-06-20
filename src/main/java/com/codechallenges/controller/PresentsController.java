@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/presents")
-public class PresentController {
+public class PresentsController {
 
     @Autowired
     PresentService presentService;
@@ -40,7 +40,7 @@ public class PresentController {
      * Returns 404 if no such present exists.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Present getPresentForId(@RequestParam int id){
+    public Present getPresentForId(@PathVariable int id){
         return presentService.getPresentForId(id);
     }
 
@@ -67,7 +67,7 @@ public class PresentController {
      * Post a new list of presents
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
-    public void updatePresent(@RequestBody Present present, @RequestParam int id){
+    public void updatePresent(@RequestBody Present present, @PathVariable int id){
 
         presentService.updatePresentForId(present, id);
 
@@ -78,8 +78,8 @@ public class PresentController {
      * @param present
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void replacePresent(Present present){
-        presentService.replacePresent(present);
+    public void replacePresent(@RequestBody Present present, @PathVariable int id){
+        presentService.replacePresent(present, id);
     }
 
     //add present
@@ -94,7 +94,7 @@ public class PresentController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deletePresent(@RequestParam int id){
+    public void deletePresent(@PathVariable int id){
         presentService.deletePresentForId(id);
     }
 

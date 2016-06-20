@@ -181,11 +181,12 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
     public void testAddWishlistItem(){
 
         ArrayList<WishItem> wishItems = getWishlistGoodData();
+        int id = 0;
 
         WishItem addedItem = new WishItem().setName("Laptop").setClatters("no").setSize("medium").setWeight("light");
 
         specimen.addWishItems(wishItems);
-        specimen.replaceWishItem(addedItem);
+        specimen.replaceWishItem(addedItem, id);
 
         wishItems.add(addedItem);
 

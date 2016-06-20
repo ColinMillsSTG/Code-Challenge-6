@@ -24,6 +24,11 @@ public class WishlistController {
     @Autowired
     PresentService presentService;
 
+    @RequestMapping(value = "/index")
+    public String index(){
+        return "index";
+    }
+
     /**
      * Returns the wishlist item with the given matching ID
      * @param id
@@ -31,7 +36,7 @@ public class WishlistController {
      */
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET)
-    public @ResponseBody WishItem getWishItem(@RequestParam int id){
+    public @ResponseBody WishItem getWishItem(@PathVariable int id){
         return presentService.getWishlistItemForId(id);
     }
 
@@ -69,7 +74,7 @@ public class WishlistController {
      * Post a new wishlist
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
-    public void updateWishItem(@RequestBody WishItem wishlist, @RequestParam int id){
+    public void updateWishItem(@RequestBody WishItem wishlist, @PathVariable int id){
 
         presentService.updateWishlistForId(wishlist, id);
 
@@ -80,8 +85,8 @@ public class WishlistController {
      * @param wishItem
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void addWishListItem(WishItem wishItem){
-        presentService.replaceWishItem(wishItem);
+    public void addWishListItem(@RequestBody WishItem wishItem, @PathVariable int id){
+        presentService.replaceWishItem(wishItem, id);
     }
 
     /**
@@ -94,7 +99,7 @@ public class WishlistController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void deleteWishItem(@RequestParam int id){
+    public void deleteWishItem(@PathVariable int id){
             presentService.deleteWishlistItemForId(id);
     }
 

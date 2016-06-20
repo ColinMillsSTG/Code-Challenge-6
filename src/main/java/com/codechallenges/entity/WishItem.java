@@ -1,5 +1,8 @@
 package com.codechallenges.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 /**
@@ -11,11 +14,23 @@ public class WishItem {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+
+    @JsonIgnore
     private int id;
+
+    @JsonProperty("name")
     private String name;
+
+    @JsonProperty("weight")
     private String weight;
+
+    @JsonProperty("clatters")
     private String clatters;
+
+    @JsonProperty("size")
     private String size;
+
+    @JsonProperty("giver")
     private String giver;
 
     public int getId() {

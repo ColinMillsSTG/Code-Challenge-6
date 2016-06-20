@@ -59,26 +59,15 @@ public class PresentServiceImpl implements PresentService {
         return presentJpaRepository.findAll();
     }
 
+    /*
+    Post collection
+     */
+
     public void addWishItems(List<WishItem> wishlist){
         wishItemJpaRepository.save(wishlist);
     }
 
     public void addPresents(List<Present> presents){
-        presentJpaRepository.save(presents);
-    }
-
-    /*
-    Post collection
-     */
-    public void replaceWishItem(WishItem wishItem){
-        ArrayList<WishItem> wishItems = new ArrayList<>();
-        wishItems.add(wishItem);
-        wishItemJpaRepository.save(wishItem);
-    }
-
-    public void replacePresent(Present present){
-        ArrayList<Present> presents = new ArrayList<>();
-        presents.add(present);
         presentJpaRepository.save(presents);
     }
 
@@ -141,6 +130,36 @@ public class PresentServiceImpl implements PresentService {
     /*
     Put one
      */
+
+    public void replaceWishItem(WishItem wishItem, int id){
+
+        WishItem oldItem = wishItemJpaRepository.findOne(id);
+
+        if(oldItem != null){
+            oldItem = wishItem;
+
+            wishItemJpaRepository.save(oldItem);
+        }
+
+        else {
+            wishItem.setId(id);
+
+            ArrayList<WishItem> wishItems = new ArrayList<>();
+
+            wishItems.add(wishItem);
+            wishItemJpaRepository.save(wishItem);
+        }
+    }
+
+    public void replacePresent(Present present, int id){
+
+        present.setId(id);
+
+        ArrayList<Present> presents = new ArrayList<>();
+
+        presents.add(present);
+        presentJpaRepository.save(presents);
+    }
 
     /*
     Delete one

@@ -1,6 +1,6 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.PresentController;
+import com.codechallenges.controller.PresentsController;
 import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
     WebApplicationContext context;*/
 
     @Autowired
-    PresentController specimen;
+    PresentsController specimen;
 
     @Autowired
     PresentServiceImpl presentService;
@@ -197,7 +196,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
 
         when(wishItemJpaRepository.save(wishItem)).thenReturn(wishItem);
 
-        presentService.replaceWishItem(wishItem);
+        presentService.replaceWishItem(wishItem, 3);
 
         verify(wishItemJpaRepository, times(1)).save(wishItem);
     }

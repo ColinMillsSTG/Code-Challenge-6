@@ -1,6 +1,6 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.PresentController;
+import com.codechallenges.controller.PresentsController;
 import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
@@ -40,7 +40,7 @@ public class CodeChallenge6PresentControllerTests {
     private MockMvc mockMvc;
 
     @Autowired
-    PresentController specimen;
+    PresentsController specimen;
 
     @Autowired
     PresentServiceImpl presentService;
@@ -155,8 +155,8 @@ public class CodeChallenge6PresentControllerTests {
      */
     @Test
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void replacePresent(Present present){
-        presentService.replacePresent(present);
+    public void replacePresent(Present present, @PathVariable int id){
+        presentService.replacePresent(present, id);
     }
 
     //add present

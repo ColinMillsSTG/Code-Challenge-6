@@ -31,8 +31,8 @@ public interface PresentService {
     void updateWishlistForId(WishItem wishItem, int id);
     void updatePresentForId(Present present, int id);
 
-    void replaceWishItem(WishItem wishItem);
-    void replacePresent(Present present);
+    void replaceWishItem(WishItem wishItem, int id);
+    void replacePresent(Present present, int id);
 
     void deletePresentForId(Integer id) throws ResourceNotFoundException;
     void deleteWishlistItemForId(Integer id) throws ResourceNotFoundException;
