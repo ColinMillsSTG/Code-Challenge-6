@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by colin.mills on 5/25/2016.
+ * Created by colin.mills on 4/25/2016.
+ *
+ * Contains end-points for wish list guessing service.
  */
 
 @RestController
@@ -19,6 +21,10 @@ public class PresentsController {
     @Autowired
     PresentService presentService;
 
+    @Autowired
+    public PresentsController(PresentService presentService){
+        this.presentService = presentService;
+    }
     /**
      *
      * @return

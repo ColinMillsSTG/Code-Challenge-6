@@ -18,11 +18,13 @@ import java.util.List;
 @RequestMapping("/wishlist")
 public class WishlistController {
 
-    /**
-     * @Todo: Change to wishlistService
-     */
     @Autowired
     PresentService presentService;
+
+    @Autowired
+    public WishlistController(PresentService presentService){
+        this.presentService = presentService;
+    }
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -56,7 +58,7 @@ public class WishlistController {
      * @param wishlist
      * @return
      *
-     * Post a new wishlist
+     * Post a new wish list
      */
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = {"application/json"})
     public void addWishItems(@RequestBody ArrayList<WishItem> wishlist){
@@ -71,7 +73,7 @@ public class WishlistController {
      * @param id
      * @return
      *
-     * Post a new wishlist
+     * Update wish item
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
     public void updateWishItem(@RequestBody WishItem wishlist, @PathVariable int id){
