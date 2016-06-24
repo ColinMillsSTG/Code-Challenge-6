@@ -1,6 +1,5 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
 import com.codechallenges.exceptions.ResourceNotFoundException;
@@ -8,22 +7,14 @@ import com.codechallenges.repository.PresentJpaRepository;
 import com.codechallenges.repository.WishItemJpaRepository;
 import com.codechallenges.service.PresentService;
 import com.codechallenges.service.PresentServiceImpl;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.Before;
 import org.junit.Test;
-
-import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.RestAssured.when;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -37,20 +28,26 @@ import java.util.ArrayList;
 public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
 
     @Autowired
-    PresentServiceImpl presentService;
+    PresentServiceImpl specimen;
 
-    @Value("${local.server.port}")
-    int port;
+    @Mock
+    PresentJpaRepository presentJpaRepository;
+
+    @Mock
+    WishItemJpaRepository wishItemJpaRepository;
+
+    /**
+     *
+     * Setting up data
+     *
+     */
 
     @Before
     public void setup(){
 
-        RestAssured.port = port;
-        RestAssuredMockMvc.standaloneSetup(new WishlistController(presentService));
+        MockitoAnnotations.initMocks(this);
 
-        presentService.addPresents(getPresentsGoodData());
-
-        System.out.println("Setup check");
+        specimen = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
 
     }
 
@@ -107,163 +104,174 @@ public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
      */
 
     /**
-     * Returns the present item with the given matching ID
-     * @return
+     * Test for guessPresents() with null data
+     * We're expecting this to error out
      */
     @Test
-    public void testGetPresentForId() throws Exception{
-
-        int id = (int) presentService.getPresents().get(0).getId();
-
-        String response =
-
-                when().
-                        get("/presents/" + id).
-                        then().
-                        contentType(ContentType.JSON).
-                        extract().response().asString();
-
-        assertNotNull(response);
-
+    public void testGuessPresentsNullData(){
+        specimen.guessPresents();
     }
 
     /**
-     *
-     * @return
-     *
-     * Retrieve the list of present items currently in memory.
+     * Test for guessPresents() with bad data
+     * Should not return any matches
      */
     @Test
-    public void getPresents(){
+    public void testGuessPresentsBadData(){
+        ArrayList<WishItem> wishlist = getWishlistGoodData();
+        ArrayList<Present> presents = new ArrayList<>();
+        ArrayList<String> expected = new ArrayList<>();
 
-        ResponseSpecBuilder builder = new ResponseSpecBuilder();
-        builder.expectStatusCode(200);
+        when(wishItemJpaRepository.findAll()).thenReturn(wishlist);
+        when(presentJpaRepository.findAll()).thenReturn(presents);
 
-        String response =
-
-                when().
-                        get("/presents/").
-                        then().
-                        contentType(ContentType.JSON).
-                        extract().response().asString();
-
-        assertNotNull(response);
-
+        assertEquals(expected, specimen.guessPresents());
     }
 
     /**
-     *
-     * @return
-     *
-     * Put a new present list
+     * This test should return the expected presents.
      */
     @Test
-    public void testAddPresents(){
+    public void testGuessPresentsGoodData(){
+        //set data that will return data
+        ArrayList<WishItem> wishlist = getWishlistGoodData();
+        ArrayList<Present> presents = getPresentsGoodData();
+        ArrayList<String> expected = new ArrayList<>();
 
-        presentService.clearPresents();
+        expected.add("Mini Puzzle");
+        expected.add("Toy Car");
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(getPresentsGoodData())
-                .expect()
-                .statusCode(200)
-                .log().ifError()
-                .when()
-                .post("/presents/");
+        when(wishItemJpaRepository.findAll()).thenReturn(wishlist);
+        when(presentJpaRepository.findAll()).thenReturn(presents);
 
-        assertNotNull(presentService.getPresents());
-
+        assertEquals(expected, specimen.guessPresents());
     }
 
-    /**
-     *
-     * @return
-     *
-     * Post a new present list
+    /*
+    Test get methods
      */
+
     @Test
-    public void testUpdatePresentsWithGoodData(){
+    public void testSetAndGetWishlist(){
 
-        int id = 1;
-        String newGiver = "Colin";
+        ArrayList<WishItem> wishItems = getWishlistGoodData();
 
-        Present present = getPresentsGoodData().get(id).setGiver(newGiver);
+        when(wishItemJpaRepository.save(wishItems)).thenReturn(wishItems);
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(present)
-        .expect()
-                .statusCode(200)
-        .log()
-                .ifError()
-        .when()
-                .post("/presents/" + id);
+        specimen.addWishItems(wishItems);
 
-        assertEquals(newGiver, presentService.getPresentForId(id).getGiver());
+        verify(wishItemJpaRepository, times(1)).save(wishItems);
 
     }
 
     @Test
-    public void testUpdatePresentFailsWhenUpdatingNonextantItem(){
+    public void testSetAndGetPresents(){
 
-        int id = 4;
-        String newGiver = "Colin";
+        ArrayList<Present> presents = getPresentsGoodData();
 
-        Present present = new Present().setId(id).setGiver(newGiver);
+        when(presentJpaRepository.save(presents)).thenReturn(presents);
 
+        specimen.addPresents(presents);
 
-        try{
-
-            given()
-                    .contentType(ContentType.JSON)
-                    .body(present)
-                    .expect()
-                    .statusCode(200)
-                    .log().ifError()
-                    .when()
-                    .post("/presents/" + id);
-
-        }catch(AssertionError e){
-            //This is expected
-        }
+        verify(presentJpaRepository, times(1)).save(presents);
 
     }
 
-    /**
-     * Add a present item to the existing list
-     */
+    @Test
+    public void testAddWishlistItem(){
+
+        ArrayList<WishItem> wishItems = getWishlistGoodData();
+        int id = 0;
+
+        WishItem addedItem = new WishItem().setName("Laptop").setClatters("no").setSize("medium").setWeight("light");
+
+        specimen.addWishItems(wishItems);
+        specimen.replaceWishItem(addedItem, id);
+
+        wishItems.add(addedItem);
+
+        when(specimen.getWishlist()).thenReturn(wishItems);
+
+        assertEquals(wishItems, specimen.getWishlist());
+
+    }
+
     @Test
     public void testAddPresent(){
-        int id = presentService.getPresents().size() + 1;
 
-        Present present = new Present().setClatters("a bit").setGiver("Colin").setId(id).setSize("small").setWeight("light");
+        ArrayList<Present> presents = getPresentsGoodData();
 
-        given()
-                .contentType(ContentType.JSON)
-                .body(present)
-        .expect()
-                .statusCode(200)
-        .log()
-                .ifError()
-        .when()
-                .put("/presents/" + id);
+        specimen.addPresents(presents);
 
-        assertEquals(present, presentService.getPresentForId(id));
+        verify(presentJpaRepository, times(1)).save(presents);
     }
 
-    /**
-     *
-     * Given a present ID, delete the matching present.
-     *
-     */
     @Test
-    public void deletePresent(){
-        int id = 1;
+    public void testGetWishlistItemForId(){
 
-        when().
-                delete("/presents/" + id);
+        int id = 0;
 
-        assertNull(presentService.getPresentForId(id));
+        WishItem wishItem = new WishItem().setId(id).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
+
+        when(wishItemJpaRepository.findOne(id)).thenReturn(wishItem);
+
+        assertEquals(wishItem, specimen.getWishlistItemForId(id));
+        verify(wishItemJpaRepository, times(1)).findOne(id);
+
+    }
+
+    @Test
+    public void testGetPresentForId(){
+
+        int id = 0;
+
+        Present present = new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank");
+
+        when(presentJpaRepository.findOne(id)).thenReturn(present);
+
+        assertEquals(present, specimen.getPresentForId(id));
+        verify(presentJpaRepository, times(1)).findOne(id);
+
+    }
+
+    @Test
+    public void testDeleteWishlistItemForId(){
+
+        int id = 0;
+
+        specimen.deleteWishlistItemForId(id);
+
+        verify(wishItemJpaRepository, times(1)).delete(id);
+
+    }
+
+    @Test
+    public void testDeletePresentForId(){
+
+        int id = 0;
+
+        specimen.deletePresentForId(id);
+
+        verify(presentJpaRepository, times(1)).delete(id);
+
+    }
+
+    @Test
+    public void testClearWishlist(){
+
+        specimen.clearWishlist();
+
+        verify(wishItemJpaRepository, times(1)).deleteAll();
+
+    }
+
+    @Test
+    public void testClearPresents(){
+
+        specimen.clearPresents();
+
+        verify(presentJpaRepository, times(1)).deleteAll();
+
     }
 
 }

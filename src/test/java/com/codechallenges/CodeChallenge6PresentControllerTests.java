@@ -1,80 +1,78 @@
 package com.codechallenges;
 
-import com.codechallenges.controller.PresentsController;
 import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
+import com.codechallenges.exceptions.ResourceNotFoundException;
 import com.codechallenges.repository.PresentJpaRepository;
 import com.codechallenges.repository.WishItemJpaRepository;
+import com.codechallenges.service.PresentService;
 import com.codechallenges.service.PresentServiceImpl;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.http.ContentType;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import static com.jayway.restassured.RestAssured.given;
+import static com.jayway.restassured.RestAssured.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by colin.mills on 4/27/2016.
  *
- * Tests WishlistController endpoints given null data, bad data, and properly formatted data.
+ * Tests to check PresentServiceImpl functionality.
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@SpringApplicationConfiguration(classes = WishlistController.class)
-public class CodeChallenge6PresentControllerTests {
-
-    private MockMvc mockMvc;
-
-    @Autowired
-    PresentsController specimen;
+public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
 
     @Autowired
     PresentServiceImpl presentService;
 
-    @Mock
-    PresentJpaRepository presentJpaRepository;
-
-    @Mock
-    WishItemJpaRepository wishItemJpaRepository;
+    @Value("${local.server.port}")
+    int port;
 
     @Before
     public void setup(){
-        MockitoAnnotations.initMocks(this);
 
-        presentService = new PresentServiceImpl(presentJpaRepository, wishItemJpaRepository);
+        RestAssured.port = port;
+        RestAssuredMockMvc.standaloneSetup(new WishlistController(presentService));
 
-        presentService.addWishItems(getWishlistGoodData());
         presentService.addPresents(getPresentsGoodData());
 
-    }
+        System.out.println("Setup check");
 
-    /**
-     *
-     * Setting up data
-     *
-     */
+    }
 
     public ArrayList<WishItem> getWishlistGoodData(){
 
         ArrayList<WishItem> wishlist = new ArrayList<>();
 
-        wishlist.add(new WishItem().setId(0).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
-        wishlist.add(new WishItem().setId(1).setName("Toy Car").setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
-        wishlist.add(new WishItem().setId(2).setName("Card Game").setSize("small").setClatters("no").setWeight("light").setGiver("Louie"));
+        wishlist.add(new WishItem().setId(1).setName("Mini Puzzle").setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
+        wishlist.add(new WishItem().setId(2).setName("Toy Car").setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
+        wishlist.add(new WishItem().setId(3).setName("Card Game").setSize("small").setClatters("no").setWeight("light").setGiver("Louie"));
+
+        return wishlist;
+
+    }
+
+    public ArrayList<WishItem> getWishlistBadData(){
+
+        ArrayList<WishItem> wishlist = new ArrayList<>();
+
+        wishlist.add(new WishItem().setName("blah").setSize("blah").setClatters("blah").setWeight("blah"));
+        wishlist.add(new WishItem().setName("Helium").setSize("2").setClatters("0").setWeight(".000002"));
+        wishlist.add(new WishItem().setName("janky").setSize("tanky").setClatters("ganky").setWeight("healbot"));
 
         return wishlist;
 
@@ -84,8 +82,19 @@ public class CodeChallenge6PresentControllerTests {
 
         ArrayList<Present> presents = new ArrayList<>();
 
-        presents.add(new Present().setId(0).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
-        presents.add(new Present().setId(1).setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
+        presents.add(new Present().setId(1).setSize("small").setClatters("yes").setWeight("light").setGiver("Frank"));
+        presents.add(new Present().setId(2).setSize("medium").setClatters("a bit").setWeight("medium").setGiver("James"));
+
+        return presents;
+
+    }
+
+    public ArrayList<Present> getPresentsBadData(){
+
+        ArrayList<Present> presents = new ArrayList<>();
+
+        presents.add(new Present().setSize("foo").setClatters("bar").setWeight("baz"));
+        presents.add(new Present().setSize("huge").setClatters("I think it's broken").setWeight("weightless"));
 
         return presents;
 
@@ -93,88 +102,168 @@ public class CodeChallenge6PresentControllerTests {
 
     /**
      *
-     * @return
+     * Begin tests
      *
-     * Retrieve the list of presents currently in memory.
      */
-    @Test
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<Present> getPresents(){
-        return presentService.getPresents();
-    }
 
     /**
-     *
-     * @param id
+     * Returns the present item with the given matching ID
      * @return
-     *
-     * Given a present ID, find a matching present.
-     *
-     * Returns 404 if no such present exists.
      */
     @Test
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Present getPresentForId(@RequestParam int id){
-        return presentService.getPresentForId(id);
-    }
+    public void testGetPresentForId() throws Exception{
 
-    /**
-     *
-     * @param presents
-     * @return
-     *
-     * Post a new list of presents
-     */
-    @Test
-    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = {"application/json"})
-    public void postPresents(@RequestBody ArrayList<Present> presents){
+        int id = (int) presentService.getPresents().get(0).getId();
 
-        presentService.addPresents(presents);
+        String response =
+
+                when().
+                        get("/presents/" + id).
+                        then().
+                        contentType(ContentType.JSON).
+                        extract().response().asString();
+
+        assertNotNull(response);
 
     }
 
     /**
      *
-     * @param present
-     * @param id
      * @return
      *
-     * Post a new list of presents
+     * Retrieve the list of present items currently in memory.
      */
     @Test
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
-    public void updatePresent(@RequestBody Present present, @RequestParam int id){
+    public void getPresents(){
 
-        presentService.updatePresentForId(present, id);
+        ResponseSpecBuilder builder = new ResponseSpecBuilder();
+        builder.expectStatusCode(200);
+
+        String response =
+
+                when().
+                        get("/presents/").
+                        then().
+                        contentType(ContentType.JSON).
+                        extract().response().asString();
+
+        assertNotNull(response);
+
+    }
+
+    /**
+     *
+     * @return
+     *
+     * Put a new present list
+     */
+    @Test
+    public void testAddPresents(){
+
+        presentService.clearPresents();
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(getPresentsGoodData())
+                .expect()
+                .statusCode(200)
+                .log().ifError()
+                .when()
+                .post("/presents/");
+
+        assertNotNull(presentService.getPresents());
+
+    }
+
+    /**
+     *
+     * @return
+     *
+     * Post a new present list
+     */
+    @Test
+    public void testUpdatePresentsWithGoodData(){
+
+        int id = 1;
+        String newGiver = "Colin";
+
+        Present present = getPresentsGoodData().get(id).setGiver(newGiver);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(present)
+                .expect()
+                .statusCode(200)
+                .log()
+                .ifError()
+                .when()
+                .post("/presents/" + id);
+
+        assertEquals(newGiver, presentService.getPresentForId(id).getGiver());
+
+    }
+
+    @Test
+    public void testUpdatePresentFailsWhenUpdatingNonextantItem(){
+
+        int id = 4;
+        String newGiver = "Colin";
+
+        Present present = new Present().setId(id).setGiver(newGiver);
+
+
+        try{
+
+            given()
+                    .contentType(ContentType.JSON)
+                    .body(present)
+                    .expect()
+                    .statusCode(200)
+                    .log().ifError()
+                    .when()
+                    .post("/presents/" + id);
+
+        }catch(AssertionError e){
+            //This is expected
+        }
 
     }
 
     /**
      * Add a present item to the existing list
-     * @param present
      */
     @Test
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
-    public void replacePresent(Present present, @PathVariable int id){
-        presentService.replacePresent(present, id);
-    }
+    public void testAddPresent(){
+        int id = presentService.getPresents().size() + 1;
 
-    //add present
+        Present present = new Present().setClatters("a bit").setGiver("Colin").setId(id).setSize("small").setWeight("light");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(present)
+                .expect()
+                .statusCode(200)
+                .log()
+                .ifError()
+                .when()
+                .put("/presents/" + id);
+
+        assertEquals(present, presentService.getPresentForId(id));
+    }
 
     /**
      *
-     *
      * Given a present ID, delete the matching present.
      *
-     * Returns 404 if no such present exists.
      */
     @Test
-    public void deleteWishItem(){
-        int id = 0;
+    public void deletePresent(){
+        int id = 1;
 
-        presentService.deleteWishlistItemForId(id);
+        when().
+                delete("/presents/" + id);
 
-        verify(wishItemJpaRepository, times(1)).delete(id);
+        assertNull(presentService.getPresentForId(id));
     }
 
 }
