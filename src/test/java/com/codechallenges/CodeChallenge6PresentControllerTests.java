@@ -3,10 +3,6 @@ package com.codechallenges;
 import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
-import com.codechallenges.exceptions.ResourceNotFoundException;
-import com.codechallenges.repository.PresentJpaRepository;
-import com.codechallenges.repository.WishItemJpaRepository;
-import com.codechallenges.service.PresentService;
 import com.codechallenges.service.PresentServiceImpl;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
@@ -18,13 +14,9 @@ import org.junit.Test;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
@@ -118,7 +110,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
         String response =
 
                 when().
-                        get("/presents/" + id).
+                        get("/public/presents/" + id).
                         then().
                         contentType(ContentType.JSON).
                         extract().response().asString();
@@ -142,7 +134,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
         String response =
 
                 when().
-                        get("/presents/").
+                        get("/public/presents/").
                         then().
                         contentType(ContentType.JSON).
                         extract().response().asString();
@@ -169,7 +161,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
                 .when()
-                .post("/presents/");
+                .post("/public/presents/");
 
         assertNotNull(presentService.getPresents());
 
@@ -197,7 +189,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .log()
                 .ifError()
                 .when()
-                .post("/presents/" + id);
+                .post("/public/presents/" + id);
 
         assertEquals(newGiver, presentService.getPresentForId(id).getGiver());
 
@@ -221,7 +213,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                     .statusCode(200)
                     .log().ifError()
                     .when()
-                    .post("/presents/" + id);
+                    .post("/public/presents/" + id);
 
         }catch(AssertionError e){
             //This is expected
@@ -246,7 +238,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .log()
                 .ifError()
                 .when()
-                .put("/presents/" + id);
+                .put("/public/presents/" + id);
 
         assertEquals(present, presentService.getPresentForId(id));
     }
@@ -261,7 +253,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
         int id = 1;
 
         when().
-                delete("/presents/" + id);
+                delete("/public/presents/" + id);
 
         assertNull(presentService.getPresentForId(id));
     }

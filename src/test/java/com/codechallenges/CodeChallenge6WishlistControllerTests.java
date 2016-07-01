@@ -3,40 +3,24 @@ package com.codechallenges;
 import com.codechallenges.controller.WishlistController;
 import com.codechallenges.entity.Present;
 import com.codechallenges.entity.WishItem;
-import com.codechallenges.exceptions.ResourceNotFoundException;
-import com.codechallenges.repository.PresentJpaRepository;
-import com.codechallenges.repository.WishItemJpaRepository;
 import com.codechallenges.service.PresentServiceImpl;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.mapper.ObjectMapper;
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.mockito.stubbing.VoidMethodStubbable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
-import static io.restassured.module.mockmvc.matcher.RestAssuredMockMvcMatchers.*;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -112,7 +96,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         String response =
 
         when().
-                get("/wishlist/" + id).
+                get("/public/wishlist/" + id).
         then().
                 contentType(ContentType.JSON).
                 extract().response().asString();
@@ -136,7 +120,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         String response =
 
                 when().
-                        get("/wishlist/").
+                        get("/public/wishlist/").
                         then().
                         contentType(ContentType.JSON).
                         extract().response().asString();
@@ -163,7 +147,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .post("/wishlist/");
+                .post("/public/wishlist/");
 
         assertNotNull(presentService.getWishlist());
 
@@ -190,7 +174,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .post("/wishlist/" + id);
+                .post("/public/wishlist/" + id);
 
         assertEquals(newGiver, presentService.getWishlistItemForId(id).getGiver());
 
@@ -214,7 +198,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                     .statusCode(200)
                     .log().ifError()
             .when()
-                    .post("/wishlist/" + id);
+                    .post("/public/wishlist/" + id);
 
         }catch(AssertionError e){
             //This is expected
@@ -243,7 +227,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .put("/wishlist/" + id);
+                .put("/public/wishlist/" + id);
 
         assertEquals(wishItem.getName(), presentService.getWishlistItemForId(id).getName());
 
@@ -259,7 +243,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         int id = 1;
 
         when().
-                delete("/wishlist/" + id);
+                delete("/public/wishlist/" + id);
 
         assertNull(presentService.getWishlistItemForId(id));
     }

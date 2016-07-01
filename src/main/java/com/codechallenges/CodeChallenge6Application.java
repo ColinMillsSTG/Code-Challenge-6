@@ -16,7 +16,6 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 @SpringBootApplication
-@EnableWebMvc
 @EnableJpaRepositories(value = "com.codechallenges.repository")
 @PropertySource({"classpath:application.properties"})
 public class CodeChallenge6Application {

@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Present Guessing Front Page</title>
-</head>
-<body>
+<html lang="en" ng-app="taskManagerApp">
+    <head>
+        <meta charset="UTF-8">
+        <title>Present Guessing Front Page</title>
 
-    <div>
-        <h1>
-            Welcome to the present guessing webpage!
-        </h1>
+        <link data-require="bootstrap-css" data-semver="3.1.1" rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
 
-        <a href="showWishlist.html">Show Wishlist</a>
-        <a href="showPresents.html">Show Presents</a>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/wishlistCrudOperations.js"></script>
+    </head>
+    <body ng-controller="wishlistController as controller" >
 
-    </div>
+        <div>
+            <h1>
+                Welcome to the present guessing webpage!
+            </h1>
 
-</body>
+            <a href="showWishlist.html">Show Wishlist</a>
+            <a href="showPresents.html">Show Presents</a>
+
+        </div>
+
+        <wishlist-operation-tabs></wishlist-operation-tabs>
+    </body>
 </html>

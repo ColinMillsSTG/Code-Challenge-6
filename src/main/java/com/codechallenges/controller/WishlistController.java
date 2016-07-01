@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/wishlist")
+@RequestMapping("/public/wishlist")
 public class WishlistController {
 
     @Autowired
@@ -24,11 +24,6 @@ public class WishlistController {
     @Autowired
     public WishlistController(PresentService presentService){
         this.presentService = presentService;
-    }
-
-    @RequestMapping(value = "/index")
-    public String index(){
-        return "index";
     }
 
     /**
