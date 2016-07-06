@@ -14,8 +14,6 @@ public class WishItem {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-
-    @JsonIgnore
     private int id;
 
     @JsonProperty("name")

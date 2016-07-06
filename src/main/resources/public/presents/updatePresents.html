@@ -1,0 +1,23 @@
+<div>
+    <h4>Update Wishlist</h4>
+    <form ng-submit="updateWishlist(present)">
+        <div  ng-repeat="present in presents">
+            <fieldset class="form-group">
+                <textArea ng-model="present.size" class="form-control" placeholder="present.size" title="Size"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.clatters" class="form-control" placeholder="present.clatters" title="Clatters"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.weight" class="form-control" placeholder="present.weight" title="Weight"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.giver" class="form-control" placeholder="present.giver" title="Giver"></textArea>
+            </fieldset>
+        </div>
+
+        <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
+        </fieldset>
+    </form>
+</div>

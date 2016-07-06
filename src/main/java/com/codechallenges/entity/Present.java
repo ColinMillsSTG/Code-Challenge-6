@@ -9,18 +9,18 @@ import javax.persistence.*;
 public class Present{
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int Id;
+    private int id;
     private String size;
     private String clatters;
     private String weight;
     private String giver;
 
     public long getId() {
-        return Id;
+        return id;
     }
 
     public Present setId(int id) {
-        Id = id;
+        this.id = id;
         return this;
     }
 

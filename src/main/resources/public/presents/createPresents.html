@@ -1,0 +1,27 @@
+<div>
+    <h4>Create Present Data</h4>
+    <form ng-submit="createPresents(presents)">
+        <div ng-repeat="present in newPresents">
+            <fieldset class="form-group">
+                <textArea ng-model="present.size" class="form-control" placeholder="Size" title="Size"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.clatters" class="form-control" placeholder="Clatters" title="Clatters"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.weight" class="form-control" placeholder="Weight" title="Weight"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="present.giver" class="form-control" placeholder="Giver" title="Giver"></textArea>
+            </fieldset>
+        </div>
+
+        <fieldset class="form-group">
+            <input type="button" ng-click="newPresent()" class="btn btn-primary pull-right" value="Add Present" />
+        </fieldset>
+
+        <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
+        </fieldset>
+    </form>
+</div>

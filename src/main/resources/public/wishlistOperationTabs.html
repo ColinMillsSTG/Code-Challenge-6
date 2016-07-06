@@ -1,23 +1,23 @@
 <section>
     <!-- Tab Navigation -->
     <ul class="nav nav-pills">
-        <li ng-class="{ active:tab.isSet(1) }">
-            <a href="" ng-click="tab.setTab(1)">Create</a>
+        <li ng-class="{ active:wishlistTab.isSet(1) }">
+            <a href="" ng-click="wishlistTab.setTab(1)">Create</a>
         </li>
-        <li ng-class="{ active:tab.isSet(2) }">
-            <a href="" ng-click="tab.setTab(2)">Read</a>
+        <li ng-class="{ active:wishlistTab.isSet(2) }">
+            <a href="" ng-click="wishlistTab.setTab(2)">Read</a>
         </li>
-        <li ng-class="{ active:tab.isSet(3) }">
-            <a href="" ng-click="tab.setTab(3)">Update</a>
+        <li ng-class="{ active:wishlistTab.isSet(3) }">
+            <a href="" ng-click="wishlistTab.setTab(3)">Update</a>
         </li>
-        <li ng-class="{ active:tab.isSet(4) }">
-            <a href="" ng-click="tab.setTab(4)">Delete</a>
+        <li ng-class="{ active:wishlistTab.isSet(4) }">
+            <a href="" ng-click="wishlistTab.setTab(4)">Delete</a>
         </li>
     </ul>
 
     <!-- Content -->
-    <create ng-show="tab.isSet(1)"></create>
-    <read ng-show="tab.isSet(2)"></read>
-    <update ng-show="tab.isSet(3)"></update>
-    <delete ng-show="tab.isSet(4)"></delete>
+    <create-wishlist ng-show="wishlistTab.isSet(1)"></create-wishlist>
+    <read-wishlist ng-show="wishlistTab.isSet(2)"></read-wishlist>
+    <update-wishlist ng-show="wishlistTab.isSet(3)"></update-wishlist>
+    <delete-wishlist ng-show="wishlistTab.isSet(4)"></delete-wishlist>
 </section>

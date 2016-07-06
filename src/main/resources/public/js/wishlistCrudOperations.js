@@ -8,44 +8,44 @@ app.directive("wishlistOperationTabs", function(){
         restrict: "E",
         templateUrl: "/wishlistOperationTabs.html",
         controller: function () {
-            this.tab = 1;
+            this.wishlistTab = 1;
 
             this.isSet = function(checkTab){
-                return this.tab == checkTab;
+                return this.wishlistTab == checkTab;
             }
 
             this.setTab = function (activeTab) {
-                this.tab = activeTab;
+                this.wishlistTab = activeTab;
             }
         },
-        controllerAs: "tab"
+        controllerAs: "wishlistTab"
     }
 });
 
-app.directive("create", function(){
+app.directive("createWishlist", function(){
    return{
        restrict:"E",
-       templateUrl: "createWishlist"
+       templateUrl: "wishlist/createWishlist.html"
    }
 });
 
-app.directive("read", function(){
+app.directive("readWishlist", function(){
    return{
        restrict:"E",
-       templateUrl: "readWishlist"
+       templateUrl: "wishlist/readWishlist.html"
    }
 });
 
-app.directive("update", function(){
+app.directive("updateWishlist", function(){
    return{
        restrict:"E",
-       templateUrl: "updateWishlist"
+       templateUrl: "wishlist/updateWishlist.html"
    }
 });
 
-app.directive("delete", function(){
+app.directive("deleteWishlist", function(){
    return{
        restrict:"E",
-       templateUrl: "deleteWishlist"
+       templateUrl: "wishlist/deleteWishlist.html"
    }
 });

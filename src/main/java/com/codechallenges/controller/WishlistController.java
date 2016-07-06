@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/public/wishlist")
+@RequestMapping("/api/wishlist")
 public class WishlistController {
 
     @Autowired

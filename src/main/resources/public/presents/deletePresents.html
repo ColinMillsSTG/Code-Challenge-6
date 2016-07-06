@@ -1,0 +1,14 @@
+<div>
+    <h4>Delete Present Data</h4>
+
+    <ul ng-repeat="present in presents">
+        Present - {{present.id}}
+        <li>Size: {{present.size}}</li>
+        <li>Clatters: {{present.clatters}}</li>
+        <li>Weight: {{present.weight}}</li>
+        <li>Giver: {{present.giver}}</li>
+
+        <button ng-click="deletePresents(present)">Delete</button>
+    </ul>
+
+</div>

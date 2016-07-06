@@ -1,0 +1,12 @@
+<div>
+    <h4>Read Present Data</h4>
+
+    <button ng-click="getPresents()">Refresh</button>
+    <ul ng-repeat="present in presents">
+        Present - {{present.id}}
+        <li>Size: {{present.size}}</li>
+        <li>Clatters: {{present.clatters}}</li>
+        <li>Weight: {{present.weight}}</li>
+        <li>Giver: {{present.giver}}</li>
+    </ul>
+</div>

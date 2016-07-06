@@ -1,3 +1,13 @@
 <div>
     <h4>Delete Wishlist Data</h4>
+
+    <ul ng-repeat="wishItem in wishlist">
+        {{wishItem.name}} - {{wishItem.id}}
+        <li>Size: {{wishItem.size}}</li>
+        <li>Clatters: {{wishItem.clatters}}</li>
+        <li>Weight: {{wishItem.weight}}</li>
+        <li>Giver: {{wishItem.giver}}</li>
+
+        <button ng-click="deleteWishlist(wishItem)">Delete</button>
+    </ul>
 </div>

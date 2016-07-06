@@ -9,6 +9,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
         <script src="js/app.js"></script>
         <script src="js/wishlistCrudOperations.js"></script>
+        <script src="js/presentCrudOperations.js"></script>
     </head>
     <body ng-controller="wishlistController as controller" >
 
@@ -17,11 +18,17 @@
                 Welcome to the present guessing webpage!
             </h1>
 
-            <a href="showWishlist.html">Show Wishlist</a>
-            <a href="showPresents.html">Show Presents</a>
-
         </div>
 
-        <wishlist-operation-tabs></wishlist-operation-tabs>
+        <div style="float: left; width: 50%;">
+            <h4>Wishlist Operations</h4>
+            <wishlist-operation-tabs></wishlist-operation-tabs>
+        </div>
+
+        <div style="float: right; width: 50%;">
+            <h4>Present Operations</h4>
+            <present-operation-tabs></present-operation-tabs>
+        </div>
+
     </body>
 </html>

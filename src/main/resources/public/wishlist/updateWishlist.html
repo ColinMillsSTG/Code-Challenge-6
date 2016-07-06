@@ -1,0 +1,25 @@
+<div>
+    <h4>Update Wishlist</h4>
+    <div  ng-repeat="wishItem in wishlist">
+        <form ng-submit="updateWishlist(wishItem)">
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.name" class="form-control" placeholder="wishItem.name" title="Name"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.size" class="form-control" placeholder="wishItem.size" title="Size"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.clatters" class="form-control" placeholder="wishItem.clatters" title="Clatters"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.weight" class="form-control" placeholder="wishItem.weight" title="Weight"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.giver" class="form-control" placeholder="wishItem.giver" title="Giver"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" value="Update Item" />
+            </fieldset>
+        </form>
+    </div>
+</div>

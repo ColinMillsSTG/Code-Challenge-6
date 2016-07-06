@@ -1,0 +1,30 @@
+<div>
+    <h4>Create Wishlist Data</h4>
+    <form ng-submit="createWishlist(wishlist)">
+        <div ng-repeat="wishItem in newWishlist">
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.name" class="form-control" placeholder="Name" title="Name"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.size" class="form-control" placeholder="Size" title="Size"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.clatters" class="form-control" placeholder="Clatters" title="Clatters"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.weight" class="form-control" placeholder="Weight" title="Weight"></textArea>
+            </fieldset>
+            <fieldset class="form-group">
+                <textArea ng-model="wishItem.giver" class="form-control" placeholder="Giver" title="Giver"></textArea>
+            </fieldset>
+        </div>
+
+        <fieldset class="form-group">
+            <input type="button" ng-click="newWishItem()" class="btn btn-primary pull-right" value="Add Wish Item" />
+        </fieldset>
+
+        <fieldset class="form-group">
+            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
+        </fieldset>
+    </form>
+</div>

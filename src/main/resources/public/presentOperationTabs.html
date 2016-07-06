@@ -1,0 +1,23 @@
+<section>
+    <!-- Tab Navigation -->
+    <ul class="nav nav-pills">
+        <li ng-class="{ active:presentTab.isSet(1) }">
+            <a href="" ng-click="presentTab.setTab(1)">Create</a>
+        </li>
+        <li ng-class="{ active:presentTab.isSet(2) }">
+            <a href="" ng-click="presentTab.setTab(2)">Read</a>
+        </li>
+        <li ng-class="{ active:presentTab.isSet(3) }">
+            <a href="" ng-click="presentTab.setTab(3)">Update</a>
+        </li>
+        <li ng-class="{ active:presentTab.isSet(4) }">
+            <a href="" ng-click="presentTab.setTab(4)">Delete</a>
+        </li>
+    </ul>
+
+    <!-- Content -->
+    <create ng-show="presentTab.isSet(1)"></create>
+    <read ng-show="presentTab.isSet(2)"></read>
+    <update ng-show="presentTab.isSet(3)"></update>
+    <delete ng-show="presentTab.isSet(4)"></delete>
+</section>

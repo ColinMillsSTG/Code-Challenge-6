@@ -1,3 +1,12 @@
 <div>
     <h4>Read Wishlist Data</h4>
+
+    <button ng-click="getWishlist()">Refresh</button>
+    <ul ng-repeat="wishItem in wishlist">
+        {{wishItem.name}} - {{wishItem.id}}
+        <li>Size: {{wishItem.size}}</li>
+        <li>Clatters: {{wishItem.clatters}}</li>
+        <li>Weight: {{wishItem.weight}}</li>
+        <li>Giver: {{wishItem.giver}}</li>
+    </ul>
 </div>
