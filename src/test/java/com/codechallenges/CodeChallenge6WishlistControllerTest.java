@@ -29,18 +29,18 @@ import static org.junit.Assert.assertNull;
  * Created by colin.mills on 6/3/2016.
  */
 
-public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
+public class CodeChallenge6WishlistControllerTest extends AbstractRepositoryIT{
 
     @Autowired
     PresentServiceImpl presentService;
 
-    @Value("${local.server.port}")
-    int port;
+    //@Value("${local.server.port}")
+    //int port;
 
     @Before
     public void setup(){
 
-        RestAssured.port = port;
+        RestAssured.port = 8080;
         RestAssuredMockMvc.standaloneSetup(new WishlistController(presentService));
 
         presentService.addWishItems(getWishlistGoodData());
@@ -96,7 +96,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         String response =
 
         when().
-                get("/public/wishlist/" + id).
+                get("/api/wishlist/" + id).
         then().
                 contentType(ContentType.JSON).
                 extract().response().asString();
@@ -120,7 +120,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         String response =
 
                 when().
-                        get("/public/wishlist/").
+                        get("/api/wishlist/").
                         then().
                         contentType(ContentType.JSON).
                         extract().response().asString();
@@ -147,7 +147,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .post("/public/wishlist/");
+                .post("/api/wishlist/");
 
         assertNotNull(presentService.getWishlist());
 
@@ -174,7 +174,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .post("/public/wishlist/" + id);
+                .post("/api/wishlist/" + id);
 
         assertEquals(newGiver, presentService.getWishlistItemForId(id).getGiver());
 
@@ -198,7 +198,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                     .statusCode(200)
                     .log().ifError()
             .when()
-                    .post("/public/wishlist/" + id);
+                    .post("/api/wishlist/" + id);
 
         }catch(AssertionError e){
             //This is expected
@@ -227,7 +227,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
         .when()
-                .put("/public/wishlist/" + id);
+                .put("/api/wishlist/" + id);
 
         assertEquals(wishItem.getName(), presentService.getWishlistItemForId(id).getName());
 
@@ -243,7 +243,7 @@ public class CodeChallenge6WishlistControllerTests extends AbstractRepositoryIT{
         int id = 1;
 
         when().
-                delete("/public/wishlist/" + id);
+                delete("/api/wishlist/" + id);
 
         assertNull(presentService.getWishlistItemForId(id));
     }

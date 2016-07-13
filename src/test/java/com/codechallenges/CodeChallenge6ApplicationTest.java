@@ -9,7 +9,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = CodeChallenge6Application.class)
 @WebAppConfiguration
-public class CodeChallenge6ApplicationTests {
+public class CodeChallenge6ApplicationTest {
 
 	@Test
 	public void contextLoads() {

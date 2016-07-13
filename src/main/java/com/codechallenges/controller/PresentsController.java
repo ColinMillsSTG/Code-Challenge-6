@@ -3,6 +3,8 @@ package com.codechallenges.controller;
 import com.codechallenges.entity.Present;
 import com.codechallenges.service.PresentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class PresentsController {
      * Post a new list of presents
      */
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseStatus(value=HttpStatus.OK)
     public void postPresents(@RequestBody ArrayList<Present> presents){
 
         presentService.addPresents(presents);
@@ -73,6 +76,7 @@ public class PresentsController {
      * Post a new list of presents
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = {"application/json"})
+    @ResponseStatus(value= HttpStatus.OK)
     public void updatePresent(@RequestBody Present present, @PathVariable int id){
 
         presentService.updatePresentForId(present, id);
@@ -84,6 +88,7 @@ public class PresentsController {
      * @param present
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = {"application/json"})
+    @ResponseStatus(value=HttpStatus.OK)
     public void replacePresent(@RequestBody Present present, @PathVariable int id){
         presentService.replacePresent(present, id);
     }
@@ -99,7 +104,7 @@ public class PresentsController {
      * Returns 404 if no such present exists.
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    @ResponseBody
+    @ResponseStatus(value=HttpStatus.OK)
     public void deletePresent(@PathVariable int id){
         presentService.deletePresentForId(id);
     }

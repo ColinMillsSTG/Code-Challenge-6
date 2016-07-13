@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Tests to check PresentServiceImpl functionality.
  */
 
-public class CodeChallenge6PresentServiceTests extends AbstractRepositoryIT{
+public class CodeChallenge6PresentServiceTest extends AbstractRepositoryIT{
 
     @Autowired
     PresentServiceImpl specimen;

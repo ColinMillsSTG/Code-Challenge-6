@@ -26,18 +26,18 @@ import java.util.ArrayList;
  * Tests to check PresentServiceImpl functionality.
  */
 
-public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
+public class CodeChallenge6PresentControllerTest extends AbstractRepositoryIT{
 
     @Autowired
     PresentServiceImpl presentService;
 
-    @Value("${local.server.port}")
-    int port;
+    //@Value("${local.server.port}")
+    //int port;
 
     @Before
     public void setup(){
 
-        RestAssured.port = port;
+        RestAssured.port = 8080;
         RestAssuredMockMvc.standaloneSetup(new WishlistController(presentService));
 
         presentService.addPresents(getPresentsGoodData());
@@ -107,15 +107,15 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
 
         int id = (int) presentService.getPresents().get(0).getId();
 
-        String response =
-
-                when().
-                        get("/public/presents/" + id).
-                        then().
-                        contentType(ContentType.JSON).
-                        extract().response().asString();
-
-        assertNotNull(response);
+        given().
+        expect().
+            statusCode(200).
+        when().
+            get("/api/presents/" + id).
+            then().
+            contentType(ContentType.JSON)
+            //.extract().response().asString()
+        ;
 
     }
 
@@ -128,18 +128,15 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
     @Test
     public void getPresents(){
 
-        ResponseSpecBuilder builder = new ResponseSpecBuilder();
-        builder.expectStatusCode(200);
-
-        String response =
-
-                when().
-                        get("/public/presents/").
-                        then().
-                        contentType(ContentType.JSON).
-                        extract().response().asString();
-
-        assertNotNull(response);
+        given().
+                expect().
+                statusCode(200).
+        when().
+                get("/api/presents/").
+                then().
+                contentType(ContentType.JSON)
+                //.extract().response().asString()
+        ;
 
     }
 
@@ -161,7 +158,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .statusCode(200)
                 .log().ifError()
                 .when()
-                .post("/public/presents/");
+                .post("/api/presents/");
 
         assertNotNull(presentService.getPresents());
 
@@ -189,7 +186,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .log()
                 .ifError()
                 .when()
-                .post("/public/presents/" + id);
+                .post("/api/presents/" + id);
 
         assertEquals(newGiver, presentService.getPresentForId(id).getGiver());
 
@@ -213,7 +210,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                     .statusCode(200)
                     .log().ifError()
                     .when()
-                    .post("/public/presents/" + id);
+                    .post("/api/presents/" + id);
 
         }catch(AssertionError e){
             //This is expected
@@ -238,7 +235,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
                 .log()
                 .ifError()
                 .when()
-                .put("/public/presents/" + id);
+                .put("/api/presents/" + id);
 
         assertEquals(present, presentService.getPresentForId(id));
     }
@@ -253,7 +250,7 @@ public class CodeChallenge6PresentControllerTests extends AbstractRepositoryIT{
         int id = 1;
 
         when().
-                delete("/public/presents/" + id);
+                delete("/api/presents/" + id);
 
         assertNull(presentService.getPresentForId(id));
     }
