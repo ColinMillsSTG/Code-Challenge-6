@@ -17,7 +17,7 @@
         $scope.newWishItem = function () {
             var newIndex;
             if($scope.wishlist.length > 0){
-                newIndex = $scope.wishlist[$scope.wishlist.length].id + $scope.newWishlist.length + 1;
+                newIndex = $scope.wishlist[$scope.wishlist.length - 1].id + $scope.newWishlist.length + 1;
             }else{
                 newIndex = $scope.newWishlist.length + 1;
             }
@@ -27,7 +27,7 @@
         $scope.newPresent = function () {
             var newIndex;
             if($scope.presents.length > 0){
-                newIndex = $scope.presents[$scope.presents.length].id + $scope.newPresents.length + 1;
+                newIndex = $scope.presents[$scope.presents.length - 1].id + $scope.newPresents.length + 1;
             }else{
                 newIndex = $scope.newPresents.length + 1;
             }

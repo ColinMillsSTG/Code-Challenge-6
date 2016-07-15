@@ -1,18 +1,22 @@
 <div>
     <h4>Create Present Data</h4>
-    <form ng-submit="createPresents(presents)">
+    <form name="createPresents" ng-submit="createPresents(presents)">
         <div ng-repeat="present in newPresents">
             <fieldset class="form-group">
-                <textArea ng-model="present.size" class="form-control" placeholder="Size" title="Size"></textArea>
+                <textArea ng-model="present.size" name="size" class="form-control" placeholder="present.size" title="Size" ng-maxlength="255"></textArea>
+                <span data-ng-show="createPresents.size.$error.maxlength">Size is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="present.clatters" class="form-control" placeholder="Clatters" title="Clatters"></textArea>
+                <textArea ng-model="present.clatters" name="clatters" class="form-control" placeholder="present.clatters" title="Clatters" ng-maxlength="255"></textArea>
+                <span data-ng-show="createPresents.clatters.$error.maxlength">Clatters is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="present.weight" class="form-control" placeholder="Weight" title="Weight"></textArea>
+                <textArea ng-model="present.weight" name="weight" class="form-control" placeholder="present.weight" title="Weight" ng-maxlength="255"></textArea>
+                <span data-ng-show="createPresents.weight.$error.maxlength">Weight is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="present.giver" class="form-control" placeholder="Giver" title="Giver"></textArea>
+                <textArea ng-model="present.giver" name="giver" class="form-control" placeholder="present.giver" title="Giver" ng-maxlength="255"></textArea>
+                <span data-ng-show="createPresents.giver.$error.maxlength">Giver is too long</span>
             </fieldset>
         </div>
 
@@ -21,7 +25,7 @@
         </fieldset>
 
         <fieldset class="form-group">
-            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
+            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" ng-disabled="!createPresents.$valid"/>
         </fieldset>
     </form>
 </div>

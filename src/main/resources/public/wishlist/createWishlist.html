@@ -1,21 +1,26 @@
 <div>
     <h4>Create Wishlist Data</h4>
-    <form ng-submit="createWishlist(wishlist)">
+    <form name="createWishlistForm" ng-submit="createWishlist(wishlist)">
         <div ng-repeat="wishItem in newWishlist">
             <fieldset class="form-group">
-                <textArea ng-model="wishItem.name" class="form-control" placeholder="Name" title="Name"></textArea>
+                <textArea ng-model="wishItem.name" name ="name" class="form-control" placeholder="Name" title="Name" ng-maxlength="255"></textArea>
+                <span data-ng-show="createWishlistForm.name.$error.maxlength">Name is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="wishItem.size" class="form-control" placeholder="Size" title="Size"></textArea>
+                <textArea ng-model="wishItem.size" name="size" class="form-control" placeholder="Size" title="Size" ng-maxlength="255"></textArea>
+                <span data-ng-show="createWishlistForm.size.$error.maxlength">Size is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="wishItem.clatters" class="form-control" placeholder="Clatters" title="Clatters"></textArea>
+                <textArea ng-model="wishItem.clatters" class="form-control" placeholder="Clatters" title="Clatters" ng-maxlength="255"></textArea>
+                <span data-ng-show="createWishlistForm.clatters.$error.maxlength">Clatters is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="wishItem.weight" class="form-control" placeholder="Weight" title="Weight"></textArea>
+                <textArea ng-model="wishItem.weight" class="form-control" placeholder="Weight" title="Weight" ng-maxlength="255"></textArea>
+                <span data-ng-show="createWishlistForm.weight.$error.maxlength">Weight is too long</span>
             </fieldset>
             <fieldset class="form-group">
-                <textArea ng-model="wishItem.giver" class="form-control" placeholder="Giver" title="Giver"></textArea>
+                <textArea ng-model="wishItem.giver" class="form-control" placeholder="Giver" title="Giver" ng-maxlength="255"></textArea>
+                <span data-ng-show="createWishlistForm.giver.$error.maxlength">Giver is too long</span>
             </fieldset>
         </div>
 
@@ -24,7 +29,8 @@
         </fieldset>
 
         <fieldset class="form-group">
-            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
+            <input id="submitButton" type="submit" class="btn btn-primary pull-right" value="Submit Changes" ng-disabled="!createWishlistForm.$valid"/>
+            <span ng-show="!createWishlistForm.$valid">Please check your data</span>
         </fieldset>
     </form>
 </div>

@@ -1,23 +1,27 @@
 <div>
     <h4>Update Wishlist</h4>
-    <form ng-submit="updateWishlist(present)">
-        <div  ng-repeat="present in presents">
-            <fieldset class="form-group">
-                <textArea ng-model="present.size" class="form-control" placeholder="present.size" title="Size"></textArea>
-            </fieldset>
-            <fieldset class="form-group">
-                <textArea ng-model="present.clatters" class="form-control" placeholder="present.clatters" title="Clatters"></textArea>
-            </fieldset>
-            <fieldset class="form-group">
-                <textArea ng-model="present.weight" class="form-control" placeholder="present.weight" title="Weight"></textArea>
-            </fieldset>
-            <fieldset class="form-group">
-                <textArea ng-model="present.giver" class="form-control" placeholder="present.giver" title="Giver"></textArea>
-            </fieldset>
-        </div>
+    <div  ng-repeat="present in presents">
+        <form name="updatePresents" ng-submit="updateWishlist(present)">
+                <fieldset class="form-group">
+                    <textArea ng-model="present.size" name="name" class="form-control" placeholder="present.size" title="Size" ng-maxlength="255"></textArea>
+                    <span data-ng-show="updatePresents.size.$error.maxlength">Size is too long</span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <textArea ng-model="present.clatters" name="clatters" class="form-control" placeholder="present.clatters" title="Clatters" ng-maxlength="255"></textArea>
+                    <span data-ng-show="updatePresents.clatters.$error.maxlength">Clatters is too long</span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <textArea ng-model="present.weight" name="weight" class="form-control" placeholder="present.weight" title="Weight" ng-maxlength="255"></textArea>
+                    <span data-ng-show="updatePresents.weight.$error.maxlength">Weight is too long</span>
+                </fieldset>
+                <fieldset class="form-group">
+                    <textArea ng-model="present.giver" name="giver" class="form-control" placeholder="present.giver" title="Giver" ng-maxlength="255"></textArea>
+                    <span data-ng-show="updatePresents.giver.$error.maxlength">Giver is too long</span>
+                </fieldset>
 
-        <fieldset class="form-group">
-            <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" />
-        </fieldset>
-    </form>
+            <fieldset class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" value="Submit Changes" ng-disabled="!updatePresents.$valid"/>
+            </fieldset>
+        </form>
+    </div>
 </div>
